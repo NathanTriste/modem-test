@@ -1,5 +1,5 @@
 // ==========================================
-// 🚀 NAVE ESCAPE 
+// 🚀 NAVE ESCAPE - 
 // ==========================================
 
 
@@ -7,17 +7,25 @@
 // CANVAS
 // ==========================================
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("gameCanvas");
+
+const ctx =
+    canvas.getContext("2d");
 
 
 // ==========================================
 // TELAS
 // ==========================================
 
-const menu = document.getElementById("menu");
-const game = document.getElementById("game");
-const gameOver = document.getElementById("gameOver");
+const menu =
+    document.getElementById("menu");
+
+const game =
+    document.getElementById("game");
+
+const gameOver =
+    document.getElementById("gameOver");
 
 
 // ==========================================
@@ -50,21 +58,60 @@ const highScoreText =
 const finalScoreText =
     document.getElementById("finalScore");
 
+const powerText =
+    document.getElementById("power");
+
 
 // ==========================================
-// 🎵 MÚSICA
+// 👹 HUD DO BOSS
+// ==========================================
+
+const bossHud =
+    document.getElementById("bossHud");
+
+const bossName =
+    document.getElementById("bossName");
+
+const bossHealthBar =
+    document.getElementById("bossHealth");
+
+const bossHealthText =
+    document.getElementById("bossHealthText");
+
+
+// ==========================================
+// 🎵 MÚSICA DO MENU
+// ==========================================
+
+const musicaMenu =
+    new Audio("music/MS1stM.mp3");
+
+musicaMenu.loop = true;
+
+musicaMenu.volume = 0.25;
+
+
+// ==========================================
+// 🎵 MÚSICA DO JOGO
 // ==========================================
 
 const musica =
-    new Audio("music/NoSurprises.mp3");
+    new Audio("music/NoSuprises.mp3");
 
 musica.loop = true;
+
 musica.volume = 0.2;
 
 
-// Som do tiro
-const somTiro = new Audio("music/laser.mp3");
-somTiro.volume = 0.2;
+// ==========================================
+// 🔫 SOM DO TIRO
+// ==========================================
+
+const somTiro =
+    new Audio("music/laser.mp3");
+
+somTiro.volume = 0.4;
+
 
 // ==========================================
 // TAMANHO DO CANVAS
@@ -72,11 +119,16 @@ somTiro.volume = 0.2;
 
 function resizeCanvas() {
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width =
+        window.innerWidth;
+
+    canvas.height =
+        window.innerHeight;
 }
 
+
 resizeCanvas();
+
 
 window.addEventListener(
     "resize",
@@ -106,9 +158,14 @@ const player = {
 // ==========================================
 
 let meteors = [];
+
 let bullets = [];
+
 let particles = [];
+
 let stars = [];
+
+let powerCoins = [];
 
 
 // ==========================================
@@ -116,6 +173,7 @@ let stars = [];
 // ==========================================
 
 let score = 0;
+
 let lives = 3;
 
 let highScore =
@@ -124,6 +182,7 @@ let highScore =
             "naveEscapeHighScore"
         )
     ) || 0;
+
 
 let difficulty = 1;
 
@@ -136,6 +195,70 @@ let shootCooldown = 0;
 let gameRunning = false;
 
 let animationId;
+
+
+// ==========================================
+// 👹 SISTEMA DE BOSS
+// ==========================================
+
+// Os bosses aparecem nestas pontuações.
+
+const bossStages = [
+
+    {
+        score: 200,
+        health: 30,
+        name: "⚠ BOSS I ⚠",
+        color: "#ff4757",
+        darkColor: "#7d1520",
+        size: 115,
+        speed: 0.7
+    },
+
+    {
+        score: 500,
+        health: 50,
+        name: "☠ BOSS II ☠",
+        color: "#a855f7",
+        darkColor: "#42176b",
+        size: 145,
+        speed: 0.85
+    },
+
+    {
+        score: 1000,
+        health: 80,
+        name: "💀 BOSS III 💀",
+        color: "#ff9f00",
+        darkColor: "#6b3e00",
+        size: 180,
+        speed: 1
+    }
+
+];
+
+
+let currentBoss = null;
+
+let bossActive = false;
+
+let nextBossIndex = 0;
+
+let defeatedBosses = 0;
+
+
+// ==========================================
+// 🪙 SISTEMA DE PODER
+// ==========================================
+
+// Poder começa causando 1 de dano.
+//
+// Cada moeda aumenta +1 dano
+// SOMENTE contra bosses.
+
+let powerLevel = 1;
+
+let powerSpawnTimer = 0;
 
 
 // ==========================================
@@ -195,13 +318,21 @@ function resetPlayer() {
 
 function createMeteor() {
 
+    // Se o boss estiver ativo,
+    // meteoros normais não podem nascer.
+
+    if (bossActive) {
+        return;
+    }
+
+
     const size =
         Math.random() * 40 + 25;
 
-    // Meteoros com 45+ são grandes
 
     const isBig =
         size >= 45;
+
 
     meteors.push({
 
@@ -209,7 +340,8 @@ function createMeteor() {
             Math.random() *
             (canvas.width - size),
 
-        y: -size,
+        y:
+            -size,
 
         width: size,
         height: size,
@@ -226,10 +358,11 @@ function createMeteor() {
         rotationSpeed:
             (Math.random() - 0.5) * 0.05,
 
-        // ⭐ VIDA DO METEORO
-        health: isBig ? 2 : 1,
+        health:
+            isBig ? 2 : 1,
 
-        isBig: isBig
+        isBig:
+            isBig
     });
 }
 
@@ -238,7 +371,10 @@ function createMeteor() {
 // 💥 EXPLOSÃO
 // ==========================================
 
-function createExplosion(x, y) {
+function createExplosion(
+    x,
+    y
+) {
 
     for (
         let i = 0;
@@ -267,6 +403,42 @@ function createExplosion(x, y) {
 
 
 // ==========================================
+// 💥 EXPLOSÃO GRANDE DO BOSS
+// ==========================================
+
+function createBossExplosion(
+    x,
+    y
+) {
+
+    for (
+        let i = 0;
+        i < 60;
+        i++
+    ) {
+
+        particles.push({
+
+            x: x,
+            y: y,
+
+            speedX:
+                (Math.random() - 0.5) * 15,
+
+            speedY:
+                (Math.random() - 0.5) * 15,
+
+            size:
+                Math.random() * 7 + 2,
+
+            life:
+                Math.random() * 60 + 40
+        });
+    }
+}
+
+
+// ==========================================
 // 🔫 TIRO
 // ==========================================
 
@@ -275,8 +447,10 @@ function shoot() {
     if (!gameRunning)
         return;
 
+
     if (shootCooldown > 0)
         return;
+
 
     bullets.push({
 
@@ -289,12 +463,21 @@ function shoot() {
             player.y,
 
         width: 6,
+
         height: 18,
 
         speed: 12
     });
 
+
     shootCooldown = 10;
+
+
+    somTiro.currentTime = 0;
+
+    somTiro.play().catch(
+        () => {}
+    );
 }
 
 
@@ -304,7 +487,9 @@ function shoot() {
 
 function drawBackground() {
 
-    ctx.fillStyle = "#040711";
+    ctx.fillStyle =
+        "#02040a";
+
 
     ctx.fillRect(
         0,
@@ -313,23 +498,32 @@ function drawBackground() {
         canvas.height
     );
 
+
     for (
         const star of stars
     ) {
 
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle =
+            "#ffffff";
+
 
         ctx.globalAlpha =
             Math.random() * 0.7 + 0.3;
 
+
         ctx.fillRect(
+
             star.x,
             star.y,
+
             star.size,
             star.size
         );
 
-        star.y += star.speed;
+
+        star.y +=
+            star.speed;
+
 
         if (
             star.y >
@@ -338,11 +532,13 @@ function drawBackground() {
 
             star.y = -5;
 
+
             star.x =
                 Math.random() *
                 canvas.width;
         }
     }
+
 
     ctx.globalAlpha = 1;
 }
@@ -356,6 +552,7 @@ function drawPlayer() {
 
     ctx.save();
 
+
     ctx.translate(
 
         player.x +
@@ -368,51 +565,96 @@ function drawPlayer() {
 
     // Fogo
 
-    ctx.fillStyle = "#ff8c00";
+    ctx.fillStyle =
+        "#ff8c00";
+
 
     ctx.beginPath();
 
-    ctx.moveTo(-10, 20);
-    ctx.lineTo(0, 35);
-    ctx.lineTo(10, 20);
+
+    ctx.moveTo(
+        -10,
+        20
+    );
+
+
+    ctx.lineTo(
+        0,
+        35
+    );
+
+
+    ctx.lineTo(
+        10,
+        20
+    );
+
 
     ctx.fill();
 
 
     // Corpo
 
-    ctx.fillStyle = "#00eaff";
+    ctx.fillStyle =
+        "#00eaff";
+
 
     ctx.beginPath();
 
-    ctx.moveTo(0, -28);
 
-    ctx.lineTo(-22, 25);
+    ctx.moveTo(
+        0,
+        -28
+    );
 
-    ctx.lineTo(0, 17);
 
-    ctx.lineTo(22, 25);
+    ctx.lineTo(
+        -22,
+        25
+    );
+
+
+    ctx.lineTo(
+        0,
+        17
+    );
+
+
+    ctx.lineTo(
+        22,
+        25
+    );
+
 
     ctx.closePath();
+
 
     ctx.fill();
 
 
     // Cabine
 
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle =
+        "#ffffff";
+
 
     ctx.beginPath();
 
+
     ctx.arc(
+
         0,
         -8,
+
         7,
+
         0,
         Math.PI * 2
     );
 
+
     ctx.fill();
+
 
     ctx.restore();
 }
@@ -422,9 +664,12 @@ function drawPlayer() {
 // ☄️ DESENHAR METEORO
 // ==========================================
 
-function drawMeteor(meteor) {
+function drawMeteor(
+    meteor
+) {
 
     ctx.save();
+
 
     ctx.translate(
 
@@ -435,28 +680,30 @@ function drawMeteor(meteor) {
         meteor.height / 2
     );
 
+
     ctx.rotate(
         meteor.rotation
     );
 
 
-    // Meteoros grandes ficam
-    // visualmente diferentes
-
     if (meteor.isBig) {
 
-        ctx.fillStyle = "#9b4d32";
+        ctx.fillStyle =
+            "#9b4d32";
 
     } else {
 
-        ctx.fillStyle = "#777";
+        ctx.fillStyle =
+            "#777";
     }
 
 
     ctx.beginPath();
 
+
     const radius =
         meteor.width / 2;
+
 
     for (
         let i = 0;
@@ -465,32 +712,45 @@ function drawMeteor(meteor) {
     ) {
 
         const angle =
-            (Math.PI * 2 / 8) * i;
+            (Math.PI * 2 / 8) *
+            i;
+
 
         const randomRadius =
             radius *
             (
                 0.75 +
-                Math.random() * 0.25
+                Math.random() *
+                0.25
             );
+
 
         const x =
             Math.cos(angle) *
             randomRadius;
 
+
         const y =
             Math.sin(angle) *
             randomRadius;
 
+
         if (i === 0) {
 
-            ctx.moveTo(x, y);
+            ctx.moveTo(
+                x,
+                y
+            );
 
         } else {
 
-            ctx.lineTo(x, y);
+            ctx.lineTo(
+                x,
+                y
+            );
         }
     }
+
 
     ctx.closePath();
 
@@ -504,7 +764,9 @@ function drawMeteor(meteor) {
             ? "#54291f"
             : "#444";
 
+
     ctx.beginPath();
+
 
     ctx.arc(
 
@@ -515,9 +777,9 @@ function drawMeteor(meteor) {
         radius * 0.2,
 
         0,
-
         Math.PI * 2
     );
+
 
     ctx.fill();
 
@@ -529,11 +791,14 @@ function drawMeteor(meteor) {
         ctx.fillStyle =
             "#ffffff";
 
+
         ctx.font =
             "bold 14px Arial";
 
+
         ctx.textAlign =
             "center";
+
 
         ctx.fillText(
             meteor.health,
@@ -542,7 +807,725 @@ function drawMeteor(meteor) {
         );
     }
 
+
     ctx.restore();
+}
+
+
+// ==========================================
+// 👹 CRIAR BOSS
+// ==========================================
+
+function createBoss(
+    stage
+) {
+
+    // Limpa todos os meteoros normais.
+
+    meteors = [];
+
+
+    bullets = [];
+
+
+    powerCoins = [];
+
+
+    currentBoss = {
+
+        x:
+            canvas.width / 2 -
+            stage.size / 2,
+
+        y: 90,
+
+        width:
+            stage.size,
+
+        height:
+            stage.size,
+
+        speed:
+            stage.speed,
+
+        direction: 1,
+
+        health:
+            stage.health,
+
+        maxHealth:
+            stage.health,
+
+        name:
+            stage.name,
+
+        color:
+            stage.color,
+
+        darkColor:
+            stage.darkColor,
+
+        stage:
+            defeatedBosses + 1,
+
+        powerUpTimer:
+            0
+    };
+
+
+    bossActive = true;
+
+
+    powerSpawnTimer = 0;
+
+
+    bossHud.classList.remove(
+        "hidden"
+    );
+
+
+    bossName.textContent =
+        stage.name;
+
+
+    updateBossHUD();
+}
+
+
+// ==========================================
+// 👹 ATUALIZAR HUD DO BOSS
+// ==========================================
+
+function updateBossHUD() {
+
+    if (
+        !currentBoss
+    ) {
+        return;
+    }
+
+
+    const percentage =
+        Math.max(
+            0,
+            currentBoss.health /
+            currentBoss.maxHealth *
+            100
+        );
+
+
+    bossHealthBar.style.width =
+        percentage + "%";
+
+
+    bossHealthText.textContent =
+        currentBoss.health +
+        " / " +
+        currentBoss.maxHealth;
+}
+
+
+// ==========================================
+// 👹 DESENHAR BOSS
+// ==========================================
+
+function drawBoss() {
+
+    if (
+        !bossActive ||
+        !currentBoss
+    ) {
+        return;
+    }
+
+
+    const boss =
+        currentBoss;
+
+
+    ctx.save();
+
+
+    ctx.translate(
+
+        boss.x +
+        boss.width / 2,
+
+        boss.y +
+        boss.height / 2
+    );
+
+
+    // Brilho externo
+
+    ctx.shadowColor =
+        boss.color;
+
+
+    ctx.shadowBlur =
+        30;
+
+
+    // Corpo
+
+    ctx.fillStyle =
+        boss.darkColor;
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        0,
+        0,
+
+        boss.width / 2,
+
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+
+
+    ctx.shadowBlur = 0;
+
+
+    // Anel externo
+
+    ctx.strokeStyle =
+        boss.color;
+
+
+    ctx.lineWidth = 7;
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        0,
+        0,
+
+        boss.width / 2 - 5,
+
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.stroke();
+
+
+    // Núcleo
+
+    ctx.fillStyle =
+        boss.color;
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        0,
+        0,
+
+        boss.width * 0.23,
+
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+
+
+    // Olho/núcleo central
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        0,
+        0,
+
+        boss.width * 0.09,
+
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+
+
+    // Detalhes
+
+    ctx.strokeStyle =
+        boss.color;
+
+
+    ctx.lineWidth = 4;
+
+
+    for (
+        let i = 0;
+        i < 8;
+        i++
+    ) {
+
+        const angle =
+            (
+                Math.PI * 2 / 8
+            ) * i;
+
+
+        const x1 =
+            Math.cos(angle) *
+            boss.width *
+            0.30;
+
+
+        const y1 =
+            Math.sin(angle) *
+            boss.width *
+            0.30;
+
+
+        const x2 =
+            Math.cos(angle) *
+            boss.width *
+            0.46;
+
+
+        const y2 =
+            Math.sin(angle) *
+            boss.width *
+            0.46;
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            x1,
+            y1
+        );
+
+
+        ctx.lineTo(
+            x2,
+            y2
+        );
+
+
+        ctx.stroke();
+    }
+
+
+    ctx.restore();
+}
+
+
+// ==========================================
+// 👹 MOVIMENTO DO BOSS
+// ==========================================
+
+function updateBoss() {
+
+    if (
+        !bossActive ||
+        !currentBoss
+    ) {
+        return;
+    }
+
+
+    const boss =
+        currentBoss;
+
+
+    // Movimento lateral lento
+
+    boss.x +=
+        boss.speed *
+        boss.direction;
+
+
+    if (
+        boss.x <= 10
+    ) {
+
+        boss.x = 10;
+
+        boss.direction = 1;
+    }
+
+
+    if (
+        boss.x +
+        boss.width >=
+        canvas.width - 10
+    ) {
+
+        boss.x =
+            canvas.width -
+            boss.width -
+            10;
+
+        boss.direction = -1;
+    }
+
+
+    // Pequeno movimento vertical
+
+    boss.y =
+        90 +
+        Math.sin(
+            gameTime * 0.025
+        ) * 25;
+
+
+    // ======================================
+    // COLISÃO BOSS X PLAYER
+    // ======================================
+
+    if (
+
+        player.x <
+            boss.x +
+            boss.width &&
+
+        player.x +
+            player.width >
+            boss.x &&
+
+        player.y <
+            boss.y +
+            boss.height &&
+
+        player.y +
+            player.height >
+            boss.y
+
+    ) {
+
+        // O boss tira uma vida,
+        // mas não fica causando dano
+        // a cada frame.
+
+        lives--;
+
+        updateHUD();
+
+
+        // Empurra o jogador para baixo
+
+        player.y += 60;
+
+
+        if (
+            lives <= 0
+        ) {
+
+            endGame();
+
+            return;
+        }
+    }
+
+
+    // ======================================
+    // MOEDAS DE PODER
+    // ======================================
+
+    powerSpawnTimer++;
+
+
+    // Aproximadamente a cada 8-15 segundos,
+    // existe uma chance de aparecer uma moeda.
+
+    if (
+        powerSpawnTimer >=
+        500
+    ) {
+
+        powerSpawnTimer = 0;
+
+
+        if (
+            Math.random() <
+            0.55
+        ) {
+
+            createPowerCoin();
+        }
+    }
+}
+
+
+// ==========================================
+// 🪙 CRIAR MOEDA DE PODER
+// ==========================================
+
+function createPowerCoin() {
+
+    powerCoins.push({
+
+        x:
+            Math.random() *
+            (
+                canvas.width - 30
+            ),
+
+        y:
+            -30,
+
+        size: 22,
+
+        speed:
+            1.5 +
+            Math.random(),
+
+        rotation: 0
+    });
+}
+
+
+// ==========================================
+// 🪙 ATUALIZAR MOEDAS
+// ==========================================
+
+function updatePowerCoins() {
+
+    for (
+        let i =
+            powerCoins.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        const coin =
+            powerCoins[i];
+
+
+        coin.y +=
+            coin.speed;
+
+
+        coin.rotation +=
+            0.08;
+
+
+        // Saiu da tela
+
+        if (
+            coin.y >
+            canvas.height + 40
+        ) {
+
+            powerCoins.splice(
+                i,
+                1
+            );
+
+            continue;
+        }
+
+
+        // Colisão com jogador
+
+        if (
+
+            player.x <
+                coin.x +
+                coin.size &&
+
+            player.x +
+                player.width >
+                coin.x &&
+
+            player.y <
+                coin.y +
+                coin.size &&
+
+            player.y +
+                player.height >
+                coin.y
+
+        ) {
+
+            powerLevel++;
+
+
+            updateHUD();
+
+
+            createExplosion(
+
+                coin.x +
+                coin.size / 2,
+
+                coin.y +
+                coin.size / 2
+            );
+
+
+            powerCoins.splice(
+                i,
+                1
+            );
+        }
+    }
+}
+
+
+// ==========================================
+// 🪙 DESENHAR MOEDAS
+// ==========================================
+
+function drawPowerCoins() {
+
+    for (
+        const coin of powerCoins
+    ) {
+
+        ctx.save();
+
+
+        ctx.translate(
+
+            coin.x +
+            coin.size / 2,
+
+            coin.y +
+            coin.size / 2
+        );
+
+
+        ctx.rotate(
+            coin.rotation
+        );
+
+
+        ctx.shadowColor =
+            "#ffe600";
+
+
+        ctx.shadowBlur = 20;
+
+
+        ctx.fillStyle =
+            "#ffd700";
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+
+            0,
+            0,
+
+            coin.size / 2,
+
+            0,
+            Math.PI * 2
+        );
+
+
+        ctx.fill();
+
+
+        ctx.shadowBlur = 0;
+
+
+        ctx.strokeStyle =
+            "#fff3a0";
+
+
+        ctx.lineWidth = 2;
+
+
+        ctx.stroke();
+
+
+        ctx.fillStyle =
+            "#5c4500";
+
+
+        ctx.font =
+            "bold 14px Arial";
+
+
+        ctx.textAlign =
+            "center";
+
+
+        ctx.textBaseline =
+            "middle";
+
+
+        ctx.fillText(
+            "⚡",
+            0,
+            1
+        );
+
+
+        ctx.restore();
+    }
+}
+
+
+// ==========================================
+// 👹 VERIFICAR SE DEVE NASCER BOSS
+// ==========================================
+
+function checkBossSpawn() {
+
+    if (
+        bossActive
+    ) {
+        return;
+    }
+
+
+    if (
+        nextBossIndex >=
+        bossStages.length
+    ) {
+        return;
+    }
+
+
+    const nextBoss =
+        bossStages[nextBossIndex];
+
+
+    if (
+        score >=
+        nextBoss.score
+    ) {
+
+        createBoss(
+            nextBoss
+        );
+
+
+        nextBossIndex++;
+    }
 }
 
 
@@ -550,17 +1533,23 @@ function drawMeteor(meteor) {
 // 🔥 DESENHAR TIRO
 // ==========================================
 
-function drawBullet(bullet) {
+function drawBullet(
+    bullet
+) {
 
     ctx.save();
 
+
     ctx.fillStyle =
-        "#ff000d";
+        "#00ffff";
+
 
     ctx.shadowColor =
         "#00ffff";
 
+
     ctx.shadowBlur = 15;
+
 
     ctx.fillRect(
 
@@ -570,6 +1559,7 @@ function drawBullet(bullet) {
         bullet.width,
         bullet.height
     );
+
 
     ctx.restore();
 }
@@ -582,19 +1572,24 @@ function drawBullet(bullet) {
 function movePlayer() {
 
     if (
+
         keys["ArrowLeft"] ||
         keys["a"] ||
         keys["A"]
+
     ) {
 
         player.x -=
             player.speed;
     }
 
+
     if (
+
         keys["ArrowRight"] ||
         keys["d"] ||
         keys["D"]
+
     ) {
 
         player.x +=
@@ -615,9 +1610,11 @@ function movePlayer() {
     // Limite direito
 
     if (
+
         player.x +
         player.width >
         canvas.width
+
     ) {
 
         player.x =
@@ -633,14 +1630,26 @@ function movePlayer() {
 
 function updateMeteors() {
 
+    // Nenhum meteoro normal durante boss.
+
+    if (
+        bossActive
+    ) {
+
+        meteors = [];
+
+        return;
+    }
+
+
     meteorTimer++;
 
 
-    // Meteoros aparecem cada vez mais rápido
-
     const spawnRate =
         Math.max(
+
             5,
+
             45 -
             difficulty * 4
         );
@@ -653,9 +1662,6 @@ function updateMeteors() {
 
         meteorTimer = 0;
 
-
-        // Quantidade aumenta
-        // conforme dificuldade
 
         const amount =
             Math.min(
@@ -698,6 +1704,7 @@ function updateMeteors() {
         meteor.y +=
             meteor.speed;
 
+
         meteor.rotation +=
             meteor.rotationSpeed;
 
@@ -719,7 +1726,7 @@ function updateMeteors() {
         }
 
 
-        // Colisão com a nave
+        // Colisão com nave
 
         if (
 
@@ -758,6 +1765,7 @@ function updateMeteors() {
 
 
             lives--;
+
 
             updateHUD();
 
@@ -821,7 +1829,80 @@ function updateBullets() {
         }
 
 
-        // Verificar colisão
+        // ==================================
+        // 👹 COLISÃO COM BOSS
+        // ==================================
+
+        if (
+            bossActive &&
+            currentBoss
+        ) {
+
+            const boss =
+                currentBoss;
+
+
+            if (
+
+                bullet.x <
+                    boss.x +
+                    boss.width &&
+
+                bullet.x +
+                    bullet.width >
+                    boss.x &&
+
+                bullet.y <
+                    boss.y +
+                    boss.height &&
+
+                bullet.y +
+                    bullet.height >
+                    boss.y
+
+            ) {
+
+                // Dano depende das moedas.
+
+                boss.health -=
+                    powerLevel;
+
+
+                bullets.splice(
+                    i,
+                    1
+                );
+
+
+                createExplosion(
+
+                    bullet.x,
+
+                    bullet.y
+                );
+
+
+                updateBossHUD();
+
+
+                // Boss morreu
+
+                if (
+                    boss.health <= 0
+                ) {
+
+                    defeatBoss();
+                }
+
+
+                continue;
+            }
+        }
+
+
+        // ==================================
+        // ☄️ METEOROS NORMAIS
+        // ==================================
 
         for (
             let j =
@@ -856,8 +1937,6 @@ function updateBullets() {
 
             ) {
 
-                // Tiro acertou
-
                 meteor.health--;
 
 
@@ -870,12 +1949,10 @@ function updateBullets() {
                 createExplosion(
 
                     bullet.x,
+
                     bullet.y
                 );
 
-
-                // Meteoros grandes
-                // precisam de 2 tiros
 
                 if (
                     meteor.health <= 0
@@ -886,8 +1963,6 @@ function updateBullets() {
                         1
                     );
 
-
-                    // Grande vale mais pontos
 
                     if (
                         meteor.isBig
@@ -903,15 +1978,6 @@ function updateBullets() {
 
                     updateHUD();
 
-                } else {
-
-                    // Meteoro grande
-                    // ainda está vivo
-
-                    console.log(
-                        "Meteoro grande atingido! Vida restante:",
-                        meteor.health
-                    );
                 }
 
 
@@ -919,6 +1985,60 @@ function updateBullets() {
             }
         }
     }
+}
+
+
+// ==========================================
+// 👹 DERROTAR BOSS
+// ==========================================
+
+function defeatBoss() {
+
+    if (
+        !currentBoss
+    ) {
+        return;
+    }
+
+
+    const boss =
+        currentBoss;
+
+
+    createBossExplosion(
+
+        boss.x +
+        boss.width / 2,
+
+        boss.y +
+        boss.height / 2
+    );
+
+
+    // Pontos extras por derrotar boss
+
+    score +=
+        25 *
+        boss.stage;
+
+
+    defeatedBosses++;
+
+
+    bossActive = false;
+
+    currentBoss = null;
+
+
+    powerCoins = [];
+
+
+    bossHud.classList.add(
+        "hidden"
+    );
+
+
+    updateHUD();
 }
 
 
@@ -944,10 +2064,13 @@ function updateParticles() {
         particle.x +=
             particle.speedX;
 
+
         particle.y +=
             particle.speedY;
 
+
         particle.life--;
+
 
         particle.size *=
             0.95;
@@ -980,24 +2103,32 @@ function drawParticles() {
         ctx.fillStyle =
             "#ff9d00";
 
+
         ctx.globalAlpha =
-            particle.life / 30;
+            particle.life /
+            30;
+
 
         ctx.beginPath();
+
 
         ctx.arc(
 
             particle.x,
+
             particle.y,
 
             particle.size,
 
             0,
+
             Math.PI * 2
         );
 
+
         ctx.fill();
     }
+
 
     ctx.globalAlpha = 1;
 }
@@ -1009,17 +2140,12 @@ function drawParticles() {
 
 function updateDifficulty() {
 
-    // A cada aproximadamente
-    // 10 segundos aumenta a dificuldade
-
     difficulty =
         1 +
         Math.floor(
             gameTime / 600
         );
 
-
-    // Nave fica mais rápida
 
     player.speed =
         Math.min(
@@ -1041,11 +2167,17 @@ function updateHUD() {
     scoreText.textContent =
         score;
 
+
     livesText.textContent =
         lives;
 
+
     highScoreText.textContent =
         highScore;
+
+
+    powerText.textContent =
+        powerLevel;
 }
 
 
@@ -1074,9 +2206,6 @@ document.addEventListener(
             event.preventDefault();
 
             shoot();
-
-            somTiro.currentTime = 0;
-            somTiro.play();
         }
 
 
@@ -1127,23 +2256,47 @@ function gameLoop() {
 
     drawBackground();
 
+
     movePlayer();
 
-    updateMeteors();
+
+    // Boss ou meteoros normais
+
+    if (
+        bossActive
+    ) {
+
+        updateBoss();
+
+        updatePowerCoins();
+
+    } else {
+
+        updateMeteors();
+
+    }
+
 
     updateBullets();
 
+
     updateParticles();
+
 
     updateDifficulty();
 
 
-    // Desenhar nave
+    // Verifica nascimento do boss
+
+    checkBossSpawn();
+
+
+    // ======================================
+    // DESENHOS
+    // ======================================
 
     drawPlayer();
 
-
-    // Desenhar meteoros
 
     for (
         const meteor
@@ -1156,7 +2309,15 @@ function gameLoop() {
     }
 
 
-    // Desenhar tiros
+    if (
+        bossActive
+    ) {
+
+        drawBoss();
+
+        drawPowerCoins();
+    }
+
 
     for (
         const bullet
@@ -1169,12 +2330,12 @@ function gameLoop() {
     }
 
 
-    // Partículas
-
     drawParticles();
 
 
-    // Pontuação pelo tempo
+    // ======================================
+    // PONTUAÇÃO PELO TEMPO
+    // ======================================
 
     if (
         gameTime % 60 === 0
@@ -1214,16 +2375,38 @@ function startGame() {
     shootCooldown = 0;
 
 
+    // Reset bosses
+
+    currentBoss = null;
+
+    bossActive = false;
+
+    nextBossIndex = 0;
+
+    defeatedBosses = 0;
+
+
+    // Reset poder
+
+    powerLevel = 1;
+
+    powerSpawnTimer = 0;
+
+
     meteors = [];
 
     bullets = [];
 
     particles = [];
 
+    powerCoins = [];
+
 
     resetPlayer();
 
+
     createStars();
+
 
     updateHUD();
 
@@ -1234,11 +2417,18 @@ function startGame() {
         "hidden"
     );
 
+
     gameOver.classList.add(
         "hidden"
     );
 
+
     game.classList.remove(
+        "hidden"
+    );
+
+
+    bossHud.classList.add(
         "hidden"
     );
 
@@ -1246,15 +2436,23 @@ function startGame() {
     gameRunning = true;
 
 
-    // 🎵 Música
+    // ======================================
+    // 🎵 TROCA MÚSICA MENU → JOGO
+    // ======================================
+
+    musicaMenu.pause();
+
+    musicaMenu.currentTime = 0;
+
 
     musica.currentTime = 0;
+
 
     musica.play().catch(
         (error) => {
 
             console.log(
-                "Não foi possível tocar a música:",
+                "Não foi possível tocar a música do jogo:",
                 error
             );
         }
@@ -1284,11 +2482,18 @@ function endGame() {
     );
 
 
-    // Para música
+    // Para música do jogo
 
     musica.pause();
 
     musica.currentTime = 0;
+
+
+    // Para música do menu
+
+    musicaMenu.pause();
+
+    musicaMenu.currentTime = 0;
 
 
     // Verifica recorde
@@ -1299,6 +2504,7 @@ function endGame() {
 
         highScore =
             score;
+
 
         localStorage.setItem(
 
@@ -1314,6 +2520,7 @@ function endGame() {
     finalScoreText.textContent =
         score;
 
+
     highScoreText.textContent =
         highScore;
 
@@ -1321,6 +2528,11 @@ function endGame() {
     // Esconde jogo
 
     game.classList.add(
+        "hidden"
+    );
+
+
+    bossHud.classList.add(
         "hidden"
     );
 
@@ -1360,18 +2572,39 @@ menuBtn.addEventListener(
             "hidden"
         );
 
+
         game.classList.add(
             "hidden"
         );
+
 
         menu.classList.remove(
             "hidden"
         );
 
 
+        bossHud.classList.add(
+            "hidden"
+        );
+
+
+        gameRunning = false;
+
+
+        // Para música do jogo
+
         musica.pause();
 
         musica.currentTime = 0;
+
+
+        // Volta música do menu
+
+        musicaMenu.currentTime = 0;
+
+        musicaMenu.play().catch(
+            () => {}
+        );
     }
 );
 
@@ -1391,12 +2624,59 @@ playBtn.addEventListener(
 
 
 // ==========================================
+// 🎵 TENTAR INICIAR MÚSICA DO MENU
+// ==========================================
+
+// Alguns navegadores bloqueiam autoplay.
+// Por isso também usamos o primeiro clique
+// do usuário para garantir a música.
+
+function iniciarMusicaMenu() {
+
+    if (
+        gameRunning
+    ) {
+        return;
+    }
+
+
+    musicaMenu.play().catch(
+        () => {}
+    );
+}
+
+
+document.addEventListener(
+    "click",
+    iniciarMusicaMenu,
+    {
+        once: true
+    }
+);
+
+
+// ==========================================
 // INICIALIZAÇÃO
 // ==========================================
 
 highScoreText.textContent =
     highScore;
 
+
 createStars();
 
+
 resetPlayer();
+
+
+// Tenta iniciar a música
+// assim que a página abre.
+
+musicaMenu.play().catch(
+    () => {
+
+        console.log(
+            "O navegador bloqueou o autoplay da música do menu."
+        );
+    }
+);

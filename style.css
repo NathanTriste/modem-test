@@ -1,0 +1,457 @@
+/* ==========================================
+   🚀 NAVE ESCAPE - v1.0.0.5
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #02040a;
+    color: white;
+}
+
+
+/* ==========================================
+   ESCONDER
+========================================== */
+
+.hidden {
+    display: none !important;
+}
+
+
+/* ==========================================
+   MENU
+========================================== */
+
+#menu {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #07162d 0%,
+            #02040a 65%
+        );
+}
+
+
+/* ==========================================
+   TÍTULO
+========================================== */
+
+.title h1 {
+
+    font-size: clamp(40px, 7vw, 80px);
+
+    letter-spacing: 5px;
+
+    color: #00eaff;
+
+    text-shadow:
+        0 0 10px #00eaff,
+        0 0 25px #00eaff,
+        0 0 50px #0077ff;
+
+    margin-bottom: 10px;
+}
+
+.version {
+
+    color: #8eefff;
+
+    font-size: 15px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 25px;
+
+    opacity: 0.8;
+}
+
+
+/* ==========================================
+   DESCRIÇÃO
+========================================== */
+
+.description {
+
+    max-width: 600px;
+
+    font-size: 18px;
+
+    color: #c7d8e8;
+
+    margin-bottom: 35px;
+
+    padding: 0 20px;
+}
+
+
+/* ==========================================
+   BOTÕES
+========================================== */
+
+button {
+
+    border: none;
+
+    cursor: pointer;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #0077ff,
+        #00c8ff
+    );
+
+    padding: 15px 45px;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    box-shadow:
+        0 0 15px rgba(0, 200, 255, 0.5);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+button:hover {
+
+    transform: scale(1.06);
+
+    box-shadow:
+        0 0 30px rgba(0, 220, 255, 0.8);
+}
+
+button:active {
+
+    transform: scale(0.97);
+}
+
+
+/* ==========================================
+   CONTROLES
+========================================== */
+
+.controls {
+
+    margin-top: 45px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    color: #a9c7d8;
+}
+
+.controls p {
+
+    color: #00eaff;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 5px;
+}
+
+
+/* ==========================================
+   JOGO
+========================================== */
+
+#game {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: #02040a;
+}
+
+
+/* ==========================================
+   CANVAS
+========================================== */
+
+#gameCanvas {
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+}
+
+
+/* ==========================================
+   HUD
+========================================== */
+
+#hud {
+
+    position: absolute;
+
+    top: 20px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 10;
+
+    display: flex;
+
+    gap: 12px;
+}
+
+.hudBox {
+
+    min-width: 100px;
+
+    padding: 10px 18px;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: white;
+
+    background: rgba(5, 15, 30, 0.8);
+
+    border: 1px solid rgba(0, 220, 255, 0.5);
+
+    box-shadow:
+        0 0 15px rgba(0, 180, 255, 0.15);
+
+    backdrop-filter: blur(5px);
+}
+
+
+/* ==========================================
+   GAME OVER
+========================================== */
+
+#gameOver {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background:
+        rgba(0, 0, 0, 0.82);
+}
+
+
+/* ==========================================
+   CAIXA GAME OVER
+========================================== */
+
+.gameOverBox {
+
+    width: min(90%, 450px);
+
+    padding: 45px 30px;
+
+    text-align: center;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #071426,
+            #02050b
+        );
+
+    border: 1px solid #00cfff;
+
+    box-shadow:
+        0 0 40px rgba(0, 200, 255, 0.25);
+}
+
+.gameOverBox h1 {
+
+    color: #ff4757;
+
+    font-size: 40px;
+
+    margin-bottom: 20px;
+
+    text-shadow:
+        0 0 15px rgba(255, 71, 87, 0.7);
+}
+
+.gameOverBox p {
+
+    color: #9fb4c7;
+
+    font-size: 18px;
+
+    margin-bottom: 5px;
+}
+
+.gameOverBox h2 {
+
+    font-size: 60px;
+
+    color: #00eaff;
+
+    margin-bottom: 30px;
+
+    text-shadow:
+        0 0 20px #00eaff;
+}
+
+.gameOverBox button {
+
+    display: block;
+
+    width: 100%;
+
+    margin-top: 12px;
+}
+
+
+/* ==========================================
+   RESPONSIVO
+========================================== */
+
+@media (max-width: 600px) {
+
+    .title h1 {
+
+        font-size: 40px;
+
+        letter-spacing: 2px;
+    }
+
+    .description {
+
+        font-size: 15px;
+    }
+
+    .hudBox {
+
+        min-width: 75px;
+
+        padding: 8px 10px;
+
+        font-size: 14px;
+    }
+
+    .gameOverBox h1 {
+
+        font-size: 30px;
+    }
+
+    .gameOverBox h2 {
+
+        font-size: 50px;
+    }
+
+    /* =========================
+   RODAPÉ / INFORMAÇÕES
+========================= */
+
+#credit {
+    position: fixed;
+    right: 12px;
+    bottom: 8px;
+
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.45);
+
+    z-index: 9999;
+
+    pointer-events: none;
+}
+
+
+#updates {
+    position: fixed;
+    left: 12px;
+    bottom: 8px;
+
+    width: 220px;
+
+    padding: 7px 10px;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.55);
+
+    z-index: 9999;
+
+    pointer-events: none;
+}
+
+
+#updates strong {
+    display: block;
+
+    font-size: 11px;
+
+    color: rgba(0, 234, 255, 0.75);
+
+    margin-bottom: 3px;
+}
+
+
+#updates span {
+    display: block;
+
+    line-height: 1.4;
+}
+
+}

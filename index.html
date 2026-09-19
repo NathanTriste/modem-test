@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nave Escape</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- =========================
+     RODAPÉ / INFORMAÇÕES
+========================== -->
+
+<div id="credit">
+    Criado e desenvolvido com total auxílio do ChatGPT
+</div>
+
+<div id="updates">
+    <strong>Atualizações</strong>
+    <span>v1.0.1.4 — Correção do volume da música e tiro.</span>
+</div>
+
+<body>
+
+    <!-- =========================
+         MENU PRINCIPAL
+    ========================== -->
+
+    <div id="menu">
+
+        <div class="title">
+
+            <h1>🚀 System of Burla</h1>
+
+            <div class="version">
+                v1.0.1.4
+            </div>
+
+        </div>
+
+        <p class="description">
+            Sobreviva aos meteoros, destrua tudo
+            e faça a maior pontuação! 
+        </p>
+
+        <button id="startButton">
+            JOGAY
+        </button>
+
+        <div class="controls">
+
+            <p>🎮 CONTROLES</p>
+
+            <span>
+                ← → ou A / D — Mover
+            </span>
+
+            <span>
+                Spaço — Atirar 🔫
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         ÁREA DO JOGO
+    ========================== -->
+
+    <div id="game" class="hidden">
+
+        <!-- HUD -->
+
+        <div id="hud">
+
+            <div class="hudBox">
+                ⭐ <span id="score">0</span>
+            </div>
+
+            <div class="hudBox">
+                ❤️ <span id="lives">3</span>
+            </div>
+
+            <div class="hudBox">
+                🔥 <span id="highScore">0</span>
+            </div>
+
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+    </div>
+
+
+    <!-- =========================
+         GAME OVER
+    ========================== -->
+
+    <div id="gameOver" class="hidden">
+
+        <div class="gameOverBox">
+
+            <h1>💥 Perdeu fi</h1>
+
+            <p>Pontuação</p>
+
+            <h2 id="finalScore">
+                0
+            </h2>
+
+            <button id="restartButton">
+                JOGAR NOVAMENTE
+            </button>
+
+            <button id="menuButton">
+                MENU
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

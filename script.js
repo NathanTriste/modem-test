@@ -488,7 +488,7 @@ function shoot() {
 function drawBackground() {
 
     ctx.fillStyle =
-        "#02040a";
+        "#00040f";
 
 
     ctx.fillRect(
@@ -504,7 +504,7 @@ function drawBackground() {
     ) {
 
         ctx.fillStyle =
-            "#ffffff";
+            "#e1deff";
 
 
         ctx.globalAlpha =
@@ -566,7 +566,7 @@ function drawPlayer() {
     // Fogo
 
     ctx.fillStyle =
-        "#ff8c00";
+        "#ff7b00";
 
 
     ctx.beginPath();
@@ -1541,11 +1541,11 @@ function drawBullet(
 
 
     ctx.fillStyle =
-        "#00ffff";
+        "#ff0000";
 
 
     ctx.shadowColor =
-        "#00ffff";
+        "#ff00c8";
 
 
     ctx.shadowBlur = 15;

@@ -100,7 +100,7 @@ const musica =
 
 musica.loop = true;
 
-musica.volume = 0.2;
+musica.volume = 0.3;
 
 
 // ==========================================

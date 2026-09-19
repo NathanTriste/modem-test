@@ -10,111 +10,122 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-
-<!-- =========================
-     RODAPÉ / INFORMAÇÕES
-========================== -->
-
-<div id="credit">
-    Criado e desenvolvido com total auxílio do ChatGPT
-</div>
-
-<div id="updates">
-    <strong>Atualizações</strong>
-
-    <span>
-        v1.0.0.3 — Sistema de Bosses, moedas de poder e música no menu
-    </span>
-</div>
-
-
 <body>
 
-    <!-- =========================
-         MENU PRINCIPAL
-    ========================== -->
+    <!-- BOTÃO DE SOM -->
+    <button id="soundBtn" class="sound-btn">🔊</button>
 
-    <div id="menu">
 
-        <div class="title">
+    <!-- POPUP INICIAL -->
 
-            <h1>🚀 System of Burla</h1>
+    <div id="welcomeOverlay" class="welcome-overlay">
 
-            <div class="version">
-                v1.0.0.3-test
+        <div class="welcome-box">
+
+            <button id="closeWelcome" class="close-welcome">
+                ✕
+            </button>
+
+            <div class="welcome-icon">
+                🚀
             </div>
 
-        </div>
+            <h2>
+                Bem-vindo ao System of Burla!
+            </h2>
 
+            <p>
+                Prepare-se para sobreviver aos meteoros,
+                enfrentar bosses e tentar conseguir a maior pontuação.
+            </p>
 
-        <p class="description">
-            Sobreviva aos meteoros, destrua tudo
-            e faça a maior pontuação! E cuidado com o Boss hehehehe
-        </p>
+            <p class="welcome-small">
+                ⚠️ Recomendamos jogar com o som ligado.
+            </p>
 
-
-        <button id="startButton">
-            JOGAY
-        </button>
-
-
-        <div class="controls">
-
-            <p>🎮 CONTROLES</p>
-
-            <span>
-                ← → ou A / D — Mover
-            </span>
-
-            <span>
-                Espaço — Atirar 🔫
-            </span>
+            <button id="enterGame" class="welcome-button">
+                ENTRAR NO JOGO
+            </button>
 
         </div>
 
     </div>
 
 
-    <!-- =========================
-         ÁREA DO JOGO
-    ========================== -->
+    <!-- MENU -->
 
-    <div id="game" class="hidden">
+    <div id="menu">
+
+        <h1>
+            🚀 System of Burla
+        </h1>
+
+        <p>
+            Sobreviva aos meteoros, destrua tudo e faça a maior pontuação!
+        </p>
+
+        <button id="startBtn">
+            JOGAY
+        </button>
+
+        <div class="controls">
+
+            <strong>CONTROLES</strong>
+
+            <br><br>
+
+            ⬅️ ➡️ ou A / D — Mover
+
+            <br>
+
+            SPACE — Atirar
+
+        </div>
+
+    </div>
+
+
+    <!-- JOGO -->
+
+    <div id="game" style="display: none;">
+
+        <canvas id="gameCanvas"></canvas>
+
 
         <!-- HUD -->
 
         <div id="hud">
 
-            <div class="hudBox">
-                ⭐ <span id="score">0</span>
+            <div class="hud-box">
+                💥 <span id="score">0</span>
             </div>
 
-            <div class="hudBox">
+            <div class="hud-box">
                 ❤️ <span id="lives">3</span>
             </div>
 
-            <div class="hudBox">
-                🔥 <span id="highScore">0</span>
+            <div class="hud-box">
+                🏆 <span id="highScore">0</span>
             </div>
 
-            <div class="hudBox powerBox">
+            <div class="hud-box power-box">
                 ⚡ <span id="power">1</span>x
             </div>
 
         </div>
 
 
-        <!-- INDICADOR DO BOSS -->
+        <!-- HUD BOSS -->
 
-        <div id="bossHud" class="hidden">
+        <div id="bossHud" class="boss-hud">
 
             <div id="bossName">
-                BOSS
+                ⚠ BOSS ⚠
             </div>
 
-            <div id="bossBar">
+            <div class="boss-health-container">
 
-                <div id="bossHealth"></div>
+                <div id="bossHealthBar"></div>
 
             </div>
 
@@ -125,36 +136,52 @@
         </div>
 
 
-        <canvas id="gameCanvas"></canvas>
+        <!-- GAME OVER -->
 
-    </div>
+        <div id="gameOver">
 
-
-    <!-- =========================
-         GAME OVER
-    ========================== -->
-
-    <div id="gameOver" class="hidden">
-
-        <div class="gameOverBox">
-
-            <h1>💥 Perdeu fi</h1>
-
-            <p>Pontuação</p>
-
-            <h2 id="finalScore">
-                0
+            <h2>
+                💥 PERDEU FI
             </h2>
 
-            <button id="restartButton">
+            <p>
+                Pontuação:
+                <span id="finalScore">0</span>
+            </p>
+
+            <button id="restartBtn">
                 JOGAR NOVAMENTE
             </button>
 
-            <button id="menuButton">
+            <button id="menuBtn">
                 MENU
             </button>
 
         </div>
+
+    </div>
+
+
+    <!-- ATUALIZAÇÕES -->
+
+    <div id="updates">
+
+        <strong>Atualizações</strong>
+
+        <br>
+
+        v1.0.0.7 — Bosses reformulados,
+        projéteis, dificuldade progressiva
+        e sistema de som.
+
+    </div>
+
+
+    <!-- CRÉDITO -->
+
+    <div id="credit">
+
+        Criado e desenvolvido com total auxílio do ChatGPT
 
     </div>
 

@@ -1,48 +1,235 @@
-/* ==========================================
-   🚀 NAVE ESCAPE 
-========================================== */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html,
 body {
 
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 
     overflow: hidden;
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    background: #02040a;
+    background: #000;
 
     color: white;
+
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 
-/* ==========================================
-   ESCONDER
-========================================== */
+/* =========================
+   BOTÃO DE SOM
+========================= */
 
-.hidden {
-    display: none !important;
+.sound-btn {
+
+    position: fixed;
+
+    top: 18px;
+    right: 18px;
+
+    z-index: 10000;
+
+    width: 48px;
+    height: 48px;
+
+    border: 1px solid rgba(255,255,255,0.25);
+
+    border-radius: 12px;
+
+    background: rgba(10,10,20,0.85);
+
+    color: white;
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    backdrop-filter: blur(8px);
+}
+
+.sound-btn:hover {
+
+    transform: scale(1.08);
+
+    background: rgba(35,35,55,0.95);
 }
 
 
-/* ==========================================
+/* =========================
+   POPUP
+========================= */
+
+.welcome-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9000;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: rgba(0,0,0,0.82);
+
+    backdrop-filter: blur(7px);
+}
+
+
+.welcome-box {
+
+    position: relative;
+
+    width: min(500px, 90%);
+
+    padding: 35px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20,20,35,0.98),
+            rgba(5,5,15,0.98)
+        );
+
+    border: 1px solid rgba(0,220,255,0.45);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 0 40px rgba(0,200,255,0.12);
+
+    animation: welcomeAppear 0.35s ease;
+}
+
+
+@keyframes welcomeAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform: scale(0.85);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: scale(1);
+
+    }
+
+}
+
+
+.welcome-icon {
+
+    font-size: 55px;
+
+    margin-bottom: 10px;
+}
+
+
+.welcome-box h2 {
+
+    margin-bottom: 15px;
+
+    color: #00e5ff;
+}
+
+
+.welcome-box p {
+
+    line-height: 1.6;
+
+    color: #ddd;
+}
+
+
+.welcome-small {
+
+    margin-top: 15px;
+
+    font-size: 13px;
+
+    color: #aaa !important;
+}
+
+
+.close-welcome {
+
+    position: absolute;
+
+    top: 10px;
+    right: 12px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #aaa;
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+
+.close-welcome:hover {
+
+    color: white;
+
+}
+
+
+.welcome-button {
+
+    margin-top: 25px;
+
+    padding: 13px 25px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #00c8ff;
+
+    color: #001018;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.welcome-button:hover {
+
+    transform: scale(1.05);
+
+    background: #27d8ff;
+}
+
+
+/* =========================
    MENU
-========================================== */
+========================= */
 
 #menu {
 
-    width: 100%;
+    width: 100vw;
     height: 100vh;
 
     display: flex;
@@ -58,710 +245,386 @@ body {
     background:
         radial-gradient(
             circle at center,
-            #07162d 0%,
-            #02040a 65%
+            #10152b 0%,
+            #03040b 60%,
+            #000 100%
         );
 }
 
 
-/* ==========================================
-   TÍTULO
-========================================== */
+#menu h1 {
 
-.title h1 {
+    font-size: clamp(38px, 6vw, 75px);
 
-    font-size:
-        clamp(
-            40px,
-            7vw,
-            80px
-        );
+    margin-bottom: 15px;
 
-    letter-spacing: 5px;
-
-    color: #00eaff;
+    color: #00e5ff;
 
     text-shadow:
-        0 0 10px #00eaff,
-        0 0 25px #00eaff,
-        0 0 50px #0077ff;
-
-    margin-bottom: 10px;
+        0 0 15px rgba(0,220,255,0.5);
 }
 
 
-.version {
+#menu p {
 
-    color: #8eefff;
+    color: #aaa;
 
-    font-size: 15px;
+    margin-bottom: 30px;
 
-    letter-spacing: 3px;
-
-    margin-bottom: 25px;
-
-    opacity: 0.8;
+    font-size: 17px;
 }
 
 
-/* ==========================================
-   DESCRIÇÃO
-========================================== */
+#startBtn {
 
-.description {
+    padding: 16px 45px;
 
-    max-width: 600px;
+    font-size: 22px;
 
-    font-size: 18px;
-
-    color: #c7d8e8;
-
-    margin-bottom: 35px;
-
-    padding: 0 20px;
-}
-
-
-/* ==========================================
-   BOTÕES
-========================================== */
-
-button {
+    font-weight: bold;
 
     border: none;
 
-    cursor: pointer;
-
-    color: white;
-
-    background:
-        linear-gradient(
-            135deg,
-            #0077ff,
-            #00c8ff
-        );
-
-    padding: 15px 45px;
-
     border-radius: 10px;
 
-    font-size: 18px;
+    background: #00d9ff;
 
-    font-weight: bold;
+    color: #001016;
 
-    letter-spacing: 2px;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+#startBtn:hover {
+
+    transform: scale(1.08);
 
     box-shadow:
-        0 0 15px
-        rgba(
-            0,
-            200,
-            255,
-            0.5
-        );
-
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s;
+        0 0 25px rgba(0,220,255,0.5);
 }
 
-
-button:hover {
-
-    transform: scale(1.06);
-
-    box-shadow:
-        0 0 30px
-        rgba(
-            0,
-            220,
-            255,
-            0.8
-        );
-}
-
-
-button:active {
-
-    transform: scale(0.97);
-}
-
-
-/* ==========================================
-   CONTROLES
-========================================== */
 
 .controls {
 
-    margin-top: 45px;
+    margin-top: 35px;
 
-    display: flex;
+    color: #777;
 
-    flex-direction: column;
+    line-height: 1.6;
 
-    gap: 10px;
-
-    color: #a9c7d8;
+    font-size: 14px;
 }
 
 
-.controls p {
-
-    color: #00eaff;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
-
-    margin-bottom: 5px;
-}
-
-
-/* ==========================================
+/* =========================
    JOGO
-========================================== */
+========================= */
 
 #game {
 
-    position: fixed;
+    width: 100vw;
+    height: 100vh;
 
-    inset: 0;
+    position: relative;
 
-    width: 100%;
-
-    height: 100%;
-
-    background: #02040a;
+    background: #000;
 }
 
-
-/* ==========================================
-   CANVAS
-========================================== */
 
 #gameCanvas {
 
     position: absolute;
 
-    left: 0;
-    top: 0;
+    inset: 0;
 
     width: 100%;
     height: 100%;
 
     display: block;
+
+    background: #000;
 }
 
 
-/* ==========================================
+/* =========================
    HUD
-========================================== */
+========================= */
 
 #hud {
 
     position: absolute;
 
     top: 20px;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-    z-index: 10;
+    left: 20px;
 
     display: flex;
 
-    gap: 12px;
+    gap: 10px;
+
+    z-index: 10;
 }
 
 
-.hudBox {
+.hud-box {
 
-    min-width: 100px;
+    padding: 9px 14px;
 
-    padding: 10px 18px;
+    border-radius: 8px;
 
-    border-radius: 10px;
+    background: rgba(10,10,20,0.7);
 
-    text-align: center;
+    border: 1px solid rgba(255,255,255,0.12);
 
-    font-size: 18px;
+    backdrop-filter: blur(5px);
 
     font-weight: bold;
-
-    color: white;
-
-    background:
-        rgba(
-            5,
-            15,
-            30,
-            0.8
-        );
-
-    border:
-        1px solid
-        rgba(
-            0,
-            220,
-            255,
-            0.5
-        );
-
-    box-shadow:
-        0 0 15px
-        rgba(
-            0,
-            180,
-            255,
-            0.15
-        );
-
-    backdrop-filter:
-        blur(5px);
 }
 
 
-/* ==========================================
-   ⚡ PODER
-========================================== */
+.power-box {
 
-.powerBox {
+    color: #ffd32a;
 
-    color: #ffe600;
-
-    border-color:
-        rgba(
-            255,
-            230,
-            0,
-            0.6
-        );
-
-    box-shadow:
-        0 0 15px
-        rgba(
-            255,
-            220,
-            0,
-            0.2
-        );
+    border-color: rgba(255,211,42,0.3);
 }
 
 
-/* ==========================================
-   👹 BOSS HUD
-========================================== */
+/* =========================
+   HUD BOSS
+========================= */
 
-#bossHud {
+.boss-hud {
 
     position: absolute;
 
-    top: 85px;
+    top: 25px;
 
     left: 50%;
 
-    transform:
-        translateX(-50%);
+    transform: translateX(-50%);
 
-    width: min(
-        500px,
-        70%
-    );
+    width: min(500px, 65vw);
+
+    text-align: center;
 
     z-index: 20;
 
-    text-align: center;
+    display: none;
 }
 
 
 #bossName {
 
-    font-size: 22px;
+    font-size: 20px;
 
     font-weight: bold;
 
-    letter-spacing: 4px;
-
-    color: #ff4757;
-
-    text-shadow:
-        0 0 10px #ff4757,
-        0 0 20px #ff0000;
-
     margin-bottom: 7px;
+
+    text-shadow: 0 0 10px currentColor;
 }
 
 
-#bossBar {
+.boss-health-container {
 
     width: 100%;
 
     height: 18px;
 
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.75
-        );
+    background: #181818;
 
-    border:
-        2px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.4
-        );
+    border: 2px solid #fff;
 
     border-radius: 20px;
 
     overflow: hidden;
-
-    box-shadow:
-        0 0 20px
-        rgba(
-            255,
-            0,
-            0,
-            0.35
-        );
 }
 
 
-#bossHealth {
+#bossHealthBar {
 
     width: 100%;
 
     height: 100%;
 
-    background:
-        linear-gradient(
-            90deg,
-            #ff0000,
-            #ff6b00
-        );
+    background: #ff4757;
 
-    transition:
-        width 0.15s;
+    transition: width 0.15s;
 }
 
 
 #bossHealthText {
 
-    margin-top: 4px;
+    margin-top: 5px;
 
     font-size: 13px;
 
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.8
-        );
+    color: #ddd;
 }
 
 
-/* ==========================================
+/* =========================
    GAME OVER
-========================================== */
+========================= */
 
 #gameOver {
 
-    position: fixed;
+    position: absolute;
 
     inset: 0;
 
     z-index: 100;
 
-    display: flex;
+    display: none;
+
+    flex-direction: column;
 
     justify-content: center;
 
     align-items: center;
 
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.82
-        );
-}
-
-
-/* ==========================================
-   CAIXA GAME OVER
-========================================== */
-
-.gameOverBox {
-
-    width:
-        min(
-            90%,
-            450px
-        );
-
-    padding: 45px 30px;
-
     text-align: center;
 
-    border-radius: 20px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #071426,
-            #02050b
-        );
-
-    border:
-        1px solid #00cfff;
-
-    box-shadow:
-        0 0 40px
-        rgba(
-            0,
-            200,
-            255,
-            0.25
-        );
+    background: rgba(0,0,0,0.94);
 }
 
 
-.gameOverBox h1 {
+#gameOver h2 {
+
+    font-size: 50px;
+
+    margin-bottom: 15px;
 
     color: #ff4757;
-
-    font-size: 40px;
-
-    margin-bottom: 20px;
-
-    text-shadow:
-        0 0 15px
-        rgba(
-            255,
-            71,
-            87,
-            0.7
-        );
 }
 
 
-.gameOverBox p {
+#gameOver p {
 
-    color: #9fb4c7;
+    margin-bottom: 25px;
 
-    font-size: 18px;
+    color: #ccc;
 
-    margin-bottom: 5px;
+    font-size: 20px;
 }
 
 
-.gameOverBox h2 {
+#gameOver button {
 
-    font-size: 60px;
+    width: 230px;
 
-    color: #00eaff;
+    padding: 12px;
 
-    margin-bottom: 30px;
+    margin: 5px;
 
-    text-shadow:
-        0 0 20px #00eaff;
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
 }
 
 
-.gameOverBox button {
+#restartBtn {
 
-    display: block;
+    background: #00d9ff;
 
-    width: 100%;
-
-    margin-top: 12px;
+    color: #001016;
 }
 
 
-/* ==========================================
-   RODAPÉ / INFORMAÇÕES
-========================================== */
+#menuBtn {
 
-#credit {
+    background: #222;
 
-    position: fixed;
-
-    right: 12px;
-
-    bottom: 8px;
-
-    font-size: 10px;
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.45
-        );
-
-    z-index: 9999;
-
-    pointer-events: none;
+    color: white;
 }
 
+
+/* =========================
+   RODAPÉ
+========================= */
 
 #updates {
 
     position: fixed;
 
     left: 12px;
+    bottom: 10px;
 
-    bottom: 8px;
-
-    width: 250px;
-
-    padding: 7px 10px;
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.45
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.12
-        );
-
-    border-radius: 6px;
+    z-index: 50;
 
     font-size: 10px;
 
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.55
-        );
+    color: #666;
 
-    z-index: 9999;
-
-    pointer-events: none;
-}
-
-
-#updates strong {
-
-    display: block;
-
-    font-size: 11px;
-
-    color:
-        rgba(
-            0,
-            234,
-            255,
-            0.75
-        );
-
-    margin-bottom: 3px;
-}
-
-
-#updates span {
-
-    display: block;
+    max-width: 250px;
 
     line-height: 1.4;
 }
 
 
-/* ==========================================
-   RESPONSIVO
-========================================== */
+#updates strong {
+
+    color: #888;
+}
+
+
+#credit {
+
+    position: fixed;
+
+    right: 12px;
+    bottom: 10px;
+
+    z-index: 50;
+
+    font-size: 10px;
+
+    color: #555;
+
+    text-align: right;
+}
+
 
 @media (max-width: 600px) {
 
-    .title h1 {
-
-        font-size: 40px;
-
-        letter-spacing: 2px;
-    }
-
-
-    .description {
-
-        font-size: 15px;
-    }
-
-
-    .hud {
-
-        gap: 5px;
-    }
-
-
     #hud {
 
+        top: 12px;
+
+        left: 10px;
+
         gap: 5px;
     }
 
+    .hud-box {
 
-    .hudBox {
+        padding: 7px 9px;
 
-        min-width: 65px;
-
-        padding: 8px 8px;
-
-        font-size: 13px;
+        font-size: 12px;
     }
 
-
-    #bossHud {
+    .boss-hud {
 
         top: 75px;
 
-        width: 80%;
+        width: 80vw;
     }
-
 
     #bossName {
 
-        font-size: 17px;
+        font-size: 16px;
     }
 
-
-    .gameOverBox h1 {
-
-        font-size: 30px;
-    }
-
-
-    .gameOverBox h2 {
-
-        font-size: 50px;
-    }
-
-
-    #updates {
-
-        width: 190px;
-    }
-
-
+    #updates,
     #credit {
 
         font-size: 8px;
     }
+
 }

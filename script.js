@@ -1,176 +1,185 @@
-// ==========================================
-// 🚀 NAVE ESCAPE - 
-// ==========================================
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const menu = document.getElementById("menu");
+const game = document.getElementById("game");
+
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const menuBtn = document.getElementById("menuBtn");
+
+const gameOverScreen = document.getElementById("gameOver");
+
+const scoreEl = document.getElementById("score");
+const livesEl = document.getElementById("lives");
+const highScoreEl = document.getElementById("highScore");
+const finalScoreEl = document.getElementById("finalScore");
+
+const powerEl = document.getElementById("power");
+
+const bossHud = document.getElementById("bossHud");
+const bossName = document.getElementById("bossName");
+const bossHealthBar = document.getElementById("bossHealthBar");
+const bossHealthText = document.getElementById("bossHealthText");
+
+const soundBtn = document.getElementById("soundBtn");
+
+const welcomeOverlay =
+    document.getElementById("welcomeOverlay");
+
+const closeWelcome =
+    document.getElementById("closeWelcome");
+
+const enterGame =
+    document.getElementById("enterGame");
 
 
-// ==========================================
-// CANVAS
-// ==========================================
+/* =========================================================
+   CANVAS
+========================================================= */
 
-const canvas =
-    document.getElementById("gameCanvas");
+function resizeCanvas() {
 
-const ctx =
-    canvas.getContext("2d");
+    canvas.width = window.innerWidth;
 
+    canvas.height = window.innerHeight;
+}
 
-// ==========================================
-// TELAS
-// ==========================================
+resizeCanvas();
 
-const menu =
-    document.getElementById("menu");
-
-const game =
-    document.getElementById("game");
-
-const gameOver =
-    document.getElementById("gameOver");
+window.addEventListener("resize", resizeCanvas);
 
 
-// ==========================================
-// BOTÕES
-// ==========================================
-
-const playBtn =
-    document.getElementById("startButton");
-
-const restartBtn =
-    document.getElementById("restartButton");
-
-const menuBtn =
-    document.getElementById("menuButton");
-
-
-// ==========================================
-// HUD
-// ==========================================
-
-const scoreText =
-    document.getElementById("score");
-
-const livesText =
-    document.getElementById("lives");
-
-const highScoreText =
-    document.getElementById("highScore");
-
-const finalScoreText =
-    document.getElementById("finalScore");
-
-const powerText =
-    document.getElementById("power");
-
-
-// ==========================================
-// 👹 HUD DO BOSS
-// ==========================================
-
-const bossHud =
-    document.getElementById("bossHud");
-
-const bossName =
-    document.getElementById("bossName");
-
-const bossHealthBar =
-    document.getElementById("bossHealth");
-
-const bossHealthText =
-    document.getElementById("bossHealthText");
-
-
-// ==========================================
-// 🎵 MÚSICA DO MENU
-// ==========================================
+/* =========================================================
+   ÁUDIO
+========================================================= */
 
 const musicaMenu =
     new Audio("music/MS1stM.mp3");
 
-musicaMenu.loop = true;
-
-musicaMenu.volume = 0.3;
-
-
-// ==========================================
-// 🎵 MÚSICA DO JOGO
-// ==========================================
-
-const musica =
+const musicaJogo =
     new Audio("music/NoSuprises.mp3");
 
-musica.loop = true;
-
-musica.volume = 0.3;
-
-
-// ==========================================
-// 🔫 SOM DO TIRO
-// ==========================================
-
-const somTiro =
+const somLaser =
     new Audio("music/laser.mp3");
 
-somTiro.volume = 0.1;
+
+musicaMenu.loop = true;
+musicaJogo.loop = true;
+
+musicaMenu.volume = 0.25;
+musicaJogo.volume = 0.20;
+somLaser.volume = 0.40;
 
 
-// ==========================================
-// TAMANHO DO CANVAS
-// ==========================================
+let soundEnabled = true;
 
-function resizeCanvas() {
 
-    canvas.width =
-        window.innerWidth;
+function atualizarBotaoSom() {
 
-    canvas.height =
-        window.innerHeight;
+    soundBtn.textContent =
+        soundEnabled ? "🔊" : "🔇";
+
 }
 
 
-resizeCanvas();
+function pararTodosOsSons() {
+
+    musicaMenu.pause();
+
+    musicaJogo.pause();
+
+}
 
 
-window.addEventListener(
-    "resize",
-    resizeCanvas
+function tocarMusicaMenu() {
+
+    if (!soundEnabled) return;
+
+    musicaJogo.pause();
+
+    musicaMenu.play().catch(() => {});
+
+}
+
+
+function tocarMusicaJogo() {
+
+    if (!soundEnabled) return;
+
+    musicaMenu.pause();
+
+    musicaJogo.play().catch(() => {});
+
+}
+
+
+soundBtn.addEventListener("click", () => {
+
+    soundEnabled = !soundEnabled;
+
+    atualizarBotaoSom();
+
+
+    if (!soundEnabled) {
+
+        musicaMenu.pause();
+
+        musicaJogo.pause();
+
+    } else {
+
+        if (game.style.display !== "none") {
+
+            if (!gameOver) {
+
+                tocarMusicaJogo();
+
+            }
+
+        } else {
+
+            tocarMusicaMenu();
+
+        }
+
+    }
+
+});
+
+
+/* =========================================================
+   POPUP
+========================================================= */
+
+function fecharWelcome() {
+
+    welcomeOverlay.style.display = "none";
+
+    tocarMusicaMenu();
+
+}
+
+
+closeWelcome.addEventListener(
+    "click",
+    fecharWelcome
 );
 
 
-// ==========================================
-// 🚀 JOGADOR
-// ==========================================
-
-const player = {
-
-    x: 0,
-    y: 0,
-
-    width: 45,
-    height: 55,
-
-    speed: 7,
-    maxSpeed: 16
-};
+enterGame.addEventListener(
+    "click",
+    fecharWelcome
+);
 
 
-// ==========================================
-// ARRAYS
-// ==========================================
+/* =========================================================
+   VARIÁVEIS
+========================================================= */
 
-let meteors = [];
+let gameRunning = false;
 
-let bullets = [];
-
-let particles = [];
-
-let stars = [];
-
-let powerCoins = [];
-
-
-// ==========================================
-// VARIÁVEIS
-// ==========================================
+let gameOver = false;
 
 let score = 0;
 
@@ -184,55 +193,235 @@ let highScore =
     ) || 0;
 
 
-let difficulty = 1;
-
-let gameTime = 0;
-
-let meteorTimer = 0;
-
-let shootCooldown = 0;
-
-let gameRunning = false;
-
-let animationId;
+highScoreEl.textContent = highScore;
 
 
-// ==========================================
-// 👹 SISTEMA DE BOSS
-// ==========================================
+/* =========================================================
+   SISTEMA DE INVENCIBILIDADE
+========================================================= */
 
-// Os bosses aparecem nestas pontuações.
+/*
+    COMANDO DO CONSOLE:
+
+    nv.true//inprecio.2.0//true
+
+    ativa.
+
+    nv.false//inprecio.2.0//false
+
+    desativa.
+
+    O motivo de ser "false" no segundo
+    é que "//" transforma o restante
+    da linha em comentário.
+*/
+
+window.nv = {
+
+    true: function() {
+
+        window.nvGodMode = true;
+
+        console.log(
+            "🛡️ NV TRUE — INVENCIBILIDADE ATIVADA"
+        );
+
+    },
+
+    false: function() {
+
+        window.nvGodMode = false;
+
+        console.log(
+            "⚠️ NV FALSE — INVENCIBILIDADE DESATIVADA"
+        );
+
+    }
+
+};
+
+
+window.nvGodMode = false;
+
+
+/*
+   Também permite:
+
+   nv.true()
+   nv.false()
+
+   caso queira usar de forma mais simples.
+*/
+
+console.log(
+    "🛠️ System of Burla: comandos de teste carregados."
+);
+
+console.log(
+    "Use nv.true() para ativar invencibilidade."
+);
+
+console.log(
+    "Use nv.false() para desativar."
+);
+
+
+/* =========================================================
+   NAVE
+========================================================= */
+
+const player = {
+
+    x: 0,
+
+    y: 0,
+
+    width: 42,
+
+    height: 52,
+
+    speed: 6,
+
+    invulnerable: 0
+
+};
+
+
+/* =========================================================
+   CONTROLES
+========================================================= */
+
+const keys = {};
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        keys[event.key.toLowerCase()] = true;
+
+
+        if (
+
+            event.code === "Space" ||
+
+            event.key === "ArrowUp" ||
+
+            event.key === "ArrowDown" ||
+
+            event.key === "ArrowLeft" ||
+
+            event.key === "ArrowRight"
+
+        ) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    (event) => {
+
+        keys[event.key.toLowerCase()] = false;
+
+    }
+);
+
+
+/* =========================================================
+   OBJETOS
+========================================================= */
+
+let meteors = [];
+
+let bullets = [];
+
+let particles = [];
+
+let stars = [];
+
+let powerCoins = [];
+
+let bossProjectiles = [];
+
+
+/* =========================================================
+   METEOROS
+========================================================= */
+
+const METEOR_MAX_SPEED = 7.5;
+
+let meteorSpawnTimer = 0;
+
+
+/* =========================================================
+   BOSSES
+========================================================= */
 
 const bossStages = [
 
     {
         score: 200,
-        health: 30,
+
+        health: 60,
+
         name: "⚠ BOSS I ⚠",
+
         color: "#ff4757",
-        darkColor: "#7d1520",
-        size: 115,
-        speed: 0.7
+
+        darkColor: "#72151d",
+
+        size: 125,
+
+        speed: 0.65,
+
+        projectileSpeed: 3.2,
+
+        fireRate: 115
     },
 
     {
         score: 500,
-        health: 50,
+
+        health: 110,
+
         name: "☠ BOSS II ☠",
+
         color: "#a855f7",
+
         darkColor: "#42176b",
-        size: 145,
-        speed: 0.85
+
+        size: 155,
+
+        speed: 0.80,
+
+        projectileSpeed: 4.0,
+
+        fireRate: 90
     },
 
     {
         score: 1000,
-        health: 80,
+
+        health: 180,
+
         name: "💀 BOSS III 💀",
+
         color: "#ff9f00",
+
         darkColor: "#6b3e00",
-        size: 180,
-        speed: 1
+
+        size: 190,
+
+        speed: 0.95,
+
+        projectileSpeed: 4.8,
+
+        fireRate: 70
     }
 
 ];
@@ -247,91 +436,188 @@ let nextBossIndex = 0;
 let defeatedBosses = 0;
 
 
-// ==========================================
-// 🪙 SISTEMA DE PODER
-// ==========================================
-
-// Poder começa causando 1 de dano.
-//
-// Cada moeda aumenta +1 dano
-// SOMENTE contra bosses.
+/* =========================================================
+   POWER
+========================================================= */
 
 let powerLevel = 1;
 
 let powerSpawnTimer = 0;
 
 
-// ==========================================
-// ⭐ ESTRELAS
-// ==========================================
+/* =========================================================
+   ESTRELAS
+========================================================= */
 
 function createStars() {
 
     stars = [];
 
-    for (
-        let i = 0;
-        i < 150;
-        i++
-    ) {
+    for (let i = 0; i < 100; i++) {
 
         stars.push({
 
-            x:
-                Math.random() *
-                canvas.width,
+            x: Math.random() * canvas.width,
 
-            y:
-                Math.random() *
-                canvas.height,
+            y: Math.random() * canvas.height,
 
-            size:
-                Math.random() * 2 + 0.5,
+            size: Math.random() * 2,
 
             speed:
-                Math.random() * 2 + 0.5
+                Math.random() * 1.5 + 0.3
+
         });
+
     }
+
+}
+
+createStars();
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame() {
+
+    score = 0;
+
+    lives = 3;
+
+    meteors = [];
+
+    bullets = [];
+
+    particles = [];
+
+    powerCoins = [];
+
+    bossProjectiles = [];
+
+    currentBoss = null;
+
+    bossActive = false;
+
+    nextBossIndex = 0;
+
+    defeatedBosses = 0;
+
+    powerLevel = 1;
+
+    powerSpawnTimer = 0;
+
+    meteorSpawnTimer = 0;
+
+    player.x = canvas.width / 2;
+
+    player.y = canvas.height - 100;
+
+    player.invulnerable = 0;
+
+    scoreEl.textContent = score;
+
+    livesEl.textContent = lives;
+
+    powerEl.textContent = powerLevel;
+
+    bossHud.style.display = "none";
+
 }
 
 
-// ==========================================
-// 🚀 RESET PLAYER
-// ==========================================
+/* =========================================================
+   INICIAR
+========================================================= */
 
-function resetPlayer() {
+function startGame() {
 
-    player.x =
-        canvas.width / 2 -
-        player.width / 2;
+    resetGame();
 
-    player.y =
-        canvas.height - 100;
+    gameRunning = true;
 
-    player.speed = 7;
+    gameOver = false;
+
+    menu.style.display = "none";
+
+    game.style.display = "block";
+
+    gameOverScreen.style.display = "none";
+
+    tocarMusicaJogo();
+
+    requestAnimationFrame(gameLoop);
+
 }
 
 
-// ==========================================
-// ☄️ CRIAR METEORO
-// ==========================================
+startBtn.addEventListener(
+    "click",
+    startGame
+);
+
+
+restartBtn.addEventListener(
+    "click",
+    startGame
+);
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+menuBtn.addEventListener(
+    "click",
+    () => {
+
+        gameRunning = false;
+
+        gameOver = false;
+
+        game.style.display = "none";
+
+        menu.style.display = "flex";
+
+        gameOverScreen.style.display = "none";
+
+        bossHud.style.display = "none";
+
+        pararTodosOsSons();
+
+        tocarMusicaMenu();
+
+    }
+);
+
+
+/* =========================================================
+   CRIAR METEORO
+========================================================= */
 
 function createMeteor() {
 
-    // Se o boss estiver ativo,
-    // meteoros normais não podem nascer.
-
-    if (bossActive) {
-        return;
-    }
+    if (bossActive) return;
 
 
     const size =
         Math.random() * 40 + 25;
 
 
-    const isBig =
-        size >= 45;
+    /*
+       A velocidade cresce com a pontuação.
+
+       Mas nunca passa de 7.5.
+    */
+
+    const speed = Math.min(
+
+        2.2 +
+        (score / 100) * 0.35,
+
+        METEOR_MAX_SPEED
+
+    );
 
 
     meteors.push({
@@ -340,186 +626,1111 @@ function createMeteor() {
             Math.random() *
             (canvas.width - size),
 
-        y:
-            -size,
+        y: -size,
 
-        width: size,
-        height: size,
+        size: size,
 
-        speed:
-            Math.random() * 2 +
-            2 +
-            difficulty * 0.45,
+        speed: speed,
+
+        health:
+            size >= 45 ? 2 : 1,
 
         rotation:
             Math.random() *
             Math.PI * 2,
 
         rotationSpeed:
-            (Math.random() - 0.5) * 0.05,
+            (Math.random() - 0.5) * 0.04
 
-        health:
-            isBig ? 2 : 1,
-
-        isBig:
-            isBig
     });
+
 }
 
 
-// ==========================================
-// 💥 EXPLOSÃO
-// ==========================================
+/* =========================================================
+   METEOROS
+========================================================= */
 
-function createExplosion(
-    x,
-    y
-) {
+function updateMeteors() {
 
     for (
-        let i = 0;
-        i < 15;
-        i++
+        let i = meteors.length - 1;
+        i >= 0;
+        i--
     ) {
 
-        particles.push({
+        const meteor = meteors[i];
 
-            x: x,
-            y: y,
+        meteor.y += meteor.speed;
 
-            speedX:
-                (Math.random() - 0.5) * 8,
+        meteor.rotation +=
+            meteor.rotationSpeed;
 
-            speedY:
-                (Math.random() - 0.5) * 8,
 
-            size:
-                Math.random() * 4 + 2,
+        if (
+            meteor.y >
+            canvas.height +
+            meteor.size
+        ) {
 
-            life: 30
-        });
+            meteors.splice(i, 1);
+
+            continue;
+
+        }
+
+
+        if (
+
+            player.invulnerable <= 0 &&
+
+            !window.nvGodMode &&
+
+            circleRectCollision(
+
+                meteor.x +
+                meteor.size / 2,
+
+                meteor.y +
+                meteor.size / 2,
+
+                meteor.size / 2,
+
+                player.x -
+                player.width / 2,
+
+                player.y -
+                player.height / 2,
+
+                player.width,
+
+                player.height
+
+            )
+
+        ) {
+
+            meteors.splice(i, 1);
+
+            loseLife();
+
+        }
+
     }
+
 }
 
 
-// ==========================================
-// 💥 EXPLOSÃO GRANDE DO BOSS
-// ==========================================
-
-function createBossExplosion(
-    x,
-    y
-) {
-
-    for (
-        let i = 0;
-        i < 60;
-        i++
-    ) {
-
-        particles.push({
-
-            x: x,
-            y: y,
-
-            speedX:
-                (Math.random() - 0.5) * 15,
-
-            speedY:
-                (Math.random() - 0.5) * 15,
-
-            size:
-                Math.random() * 7 + 2,
-
-            life:
-                Math.random() * 60 + 40
-        });
-    }
-}
-
-
-// ==========================================
-// 🔫 TIRO
-// ==========================================
+/* =========================================================
+   TIRO
+========================================================= */
 
 function shoot() {
 
-    if (!gameRunning)
-        return;
-
-
-    if (shootCooldown > 0)
-        return;
+    if (!gameRunning || gameOver) return;
 
 
     bullets.push({
 
-        x:
-            player.x +
-            player.width / 2 -
-            3,
+        x: player.x,
 
-        y:
-            player.y,
+        y: player.y - 25,
 
-        width: 6,
+        speed: 11,
 
-        height: 18,
+        width: 4,
 
-        speed: 12
+        height: 18
+
     });
 
 
-    shootCooldown = 10;
+    if (soundEnabled) {
 
+        const laser =
+            somLaser.cloneNode();
 
-    somTiro.currentTime = 0;
+        laser.volume =
+            somLaser.volume;
 
-    somTiro.play().catch(
-        () => {}
-    );
+        laser.play().catch(() => {});
+
+    }
+
 }
 
 
-// ==========================================
-// 🌌 FUNDO
-// ==========================================
-
-function drawBackground() {
-
-    ctx.fillStyle =
-        "#00040f";
+let shootCooldown = 0;
 
 
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
+/* =========================================================
+   TIROS
+========================================================= */
+
+function updateBullets() {
+
+    for (
+        let i = bullets.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const bullet = bullets[i];
+
+        bullet.y -= bullet.speed;
+
+
+        if (bullet.y < -30) {
+
+            bullets.splice(i, 1);
+
+            continue;
+
+        }
+
+
+        /* BOSS */
+
+        if (
+            bossActive &&
+            currentBoss
+        ) {
+
+            const distance =
+                Math.hypot(
+
+                    bullet.x -
+                    currentBoss.x,
+
+                    bullet.y -
+                    currentBoss.y
+
+                );
+
+
+            if (
+
+                distance <
+                currentBoss.size * 0.5
+
+            ) {
+
+                currentBoss.health -=
+                    powerLevel;
+
+                bullets.splice(i, 1);
+
+
+                createExplosion(
+
+                    bullet.x,
+
+                    bullet.y,
+
+                    currentBoss.color
+
+                );
+
+
+                updateBossHud();
+
+
+                if (
+                    currentBoss.health <= 0
+                ) {
+
+                    defeatBoss();
+
+                }
+
+
+                continue;
+
+            }
+
+        }
+
+
+        /* METEOROS */
+
+        for (
+            let j = meteors.length - 1;
+            j >= 0;
+            j--
+        ) {
+
+            const meteor = meteors[j];
+
+            const distance =
+                Math.hypot(
+
+                    bullet.x -
+                    (
+                        meteor.x +
+                        meteor.size / 2
+                    ),
+
+                    bullet.y -
+                    (
+                        meteor.y +
+                        meteor.size / 2
+                    )
+
+                );
+
+
+            if (
+                distance <
+                meteor.size / 2
+            ) {
+
+                meteor.health--;
+
+                bullets.splice(i, 1);
+
+
+                createExplosion(
+
+                    bullet.x,
+
+                    bullet.y,
+
+                    "#ffffff"
+
+                );
+
+
+                if (
+                    meteor.health <= 0
+                ) {
+
+                    score +=
+                        meteor.size >= 45
+                            ? 6
+                            : 3;
+
+                    meteors.splice(j, 1);
+
+                }
+
+                break;
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   BOSS SPAWN
+========================================================= */
+
+function checkBossSpawn() {
+
+    if (bossActive) return;
+
+    if (
+        nextBossIndex >=
+        bossStages.length
+    ) return;
+
+
+    const stage =
+        bossStages[nextBossIndex];
+
+
+    if (
+        score >= stage.score
+    ) {
+
+        createBoss(stage);
+
+        nextBossIndex++;
+
+    }
+
+}
+
+
+/* =========================================================
+   CRIAR BOSS
+========================================================= */
+
+function createBoss(stage) {
+
+    meteors = [];
+
+    bullets = [];
+
+    powerCoins = [];
+
+    bossProjectiles = [];
+
+
+    currentBoss = {
+
+        ...stage,
+
+        x: canvas.width / 2,
+
+        y: 130,
+
+        health: stage.health,
+
+        maxHealth: stage.health,
+
+        direction:
+            Math.random() > 0.5
+                ? 1
+                : -1,
+
+        fireTimer: 0,
+
+        movementTime: 0
+
+    };
+
+
+    bossActive = true;
+
+    bossHud.style.display =
+        "block";
+
+    updateBossHud();
+
+}
+
+
+/* =========================================================
+   HUD BOSS
+========================================================= */
+
+function updateBossHud() {
+
+    if (!currentBoss) return;
+
+
+    bossName.textContent =
+        currentBoss.name;
+
+    bossName.style.color =
+        currentBoss.color;
+
+
+    const percentage =
+        Math.max(
+
+            0,
+
+            currentBoss.health /
+            currentBoss.maxHealth *
+            100
+
+        );
+
+
+    bossHealthBar.style.width =
+        percentage + "%";
+
+
+    bossHealthBar.style.background =
+        currentBoss.color;
+
+
+    bossHealthText.textContent =
+
+        `${Math.max(
+            0,
+            currentBoss.health
+        )} / ${currentBoss.maxHealth}`;
+
+}
+
+
+/* =========================================================
+   BOSS
+========================================================= */
+
+function updateBoss() {
+
+    if (
+        !bossActive ||
+        !currentBoss
+    ) return;
+
+
+    const boss = currentBoss;
+
+
+    boss.movementTime += 0.02;
+
+
+    boss.x +=
+        boss.direction *
+        boss.speed;
+
+
+    boss.y =
+        130 +
+        Math.sin(
+            boss.movementTime
+        ) * 35;
+
+
+    if (
+
+        boss.x <
+        boss.size / 2 ||
+
+        boss.x >
+        canvas.width -
+        boss.size / 2
+
+    ) {
+
+        boss.direction *= -1;
+
+    }
+
+
+    /*
+       Ataque
+    */
+
+    boss.fireTimer++;
+
+
+    if (
+        boss.fireTimer >=
+        boss.fireRate
+    ) {
+
+        boss.fireTimer = 0;
+
+        shootBossProjectile();
+
+    }
+
+
+    /*
+       Colisão direta
+    */
+
+    if (
+
+        player.invulnerable <= 0 &&
+
+        !window.nvGodMode &&
+
+        circleRectCollision(
+
+            boss.x,
+
+            boss.y,
+
+            boss.size * 0.45,
+
+            player.x -
+            player.width / 2,
+
+            player.y -
+            player.height / 2,
+
+            player.width,
+
+            player.height
+
+        )
+
+    ) {
+
+        loseLife();
+
+    }
+
+}
+
+
+/* =========================================================
+   PEDRAS DO BOSS
+========================================================= */
+
+function shootBossProjectile() {
+
+    if (!currentBoss) return;
+
+
+    const boss =
+        currentBoss;
+
+
+    const dx =
+        player.x - boss.x;
+
+    const dy =
+        player.y - boss.y;
+
+
+    const distance =
+        Math.hypot(dx, dy);
+
+
+    const speed =
+        boss.projectileSpeed;
+
+
+    bossProjectiles.push({
+
+        x: boss.x,
+
+        y:
+            boss.y +
+            boss.size * 0.3,
+
+        vx:
+            (dx / distance) *
+            speed,
+
+        vy:
+            (dy / distance) *
+            speed,
+
+        size:
+            15 +
+            Math.random() * 8,
+
+        rotation:
+            Math.random() *
+            Math.PI * 2,
+
+        rotationSpeed:
+            (Math.random() - 0.5) * 0.1,
+
+        color:
+            boss.color
+
+    });
+
+}
+
+
+/* =========================================================
+   PROJÉTEIS
+========================================================= */
+
+function updateBossProjectiles() {
+
+    for (
+        let i =
+            bossProjectiles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const projectile =
+            bossProjectiles[i];
+
+
+        projectile.x +=
+            projectile.vx;
+
+        projectile.y +=
+            projectile.vy;
+
+        projectile.rotation +=
+            projectile.rotationSpeed;
+
+
+        if (
+
+            projectile.x < -50 ||
+
+            projectile.x >
+            canvas.width + 50 ||
+
+            projectile.y < -50 ||
+
+            projectile.y >
+            canvas.height + 50
+
+        ) {
+
+            bossProjectiles.splice(
+                i,
+                1
+            );
+
+            continue;
+
+        }
+
+
+        if (
+
+            player.invulnerable <= 0 &&
+
+            !window.nvGodMode &&
+
+            circleRectCollision(
+
+                projectile.x,
+
+                projectile.y,
+
+                projectile.size,
+
+                player.x -
+                player.width / 2,
+
+                player.y -
+                player.height / 2,
+
+                player.width,
+
+                player.height
+
+            )
+
+        ) {
+
+            bossProjectiles.splice(
+                i,
+                1
+            );
+
+            loseLife();
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   MORTE DO BOSS
+========================================================= */
+
+function defeatBoss() {
+
+    const defeatedStage =
+        currentBoss;
+
+
+    createExplosion(
+
+        currentBoss.x,
+
+        currentBoss.y,
+
+        currentBoss.color
+
     );
 
+
+    score +=
+        25 * defeatedBosses +
+        25;
+
+
+    defeatedBosses++;
+
+
+    currentBoss = null;
+
+    bossActive = false;
+
+    bossProjectiles = [];
+
+    powerCoins = [];
+
+    bossHud.style.display =
+        "none";
+
+
+    scoreEl.textContent =
+        score;
+
+
+    for (let i = 0; i < 30; i++) {
+
+        particles.push({
+
+            x: canvas.width / 2,
+
+            y: 150,
+
+            vx:
+                (Math.random() - 0.5) *
+                10,
+
+            vy:
+                (Math.random() - 0.5) *
+                10,
+
+            life: 60,
+
+            size:
+                Math.random() * 5 + 2,
+
+            color:
+                defeatedStage.color
+
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   POWER COINS
+========================================================= */
+
+function createPowerCoin() {
+
+    if (!bossActive) return;
+
+
+    powerCoins.push({
+
+        x:
+            Math.random() *
+            (canvas.width - 80) +
+            40,
+
+        y: -30,
+
+        size: 15,
+
+        speed: 2.5,
+
+        rotation: 0
+
+    });
+
+}
+
+
+function updatePowerCoins() {
+
+    if (!bossActive) return;
+
+
+    powerSpawnTimer++;
+
+
+    if (
+        powerSpawnTimer >= 480
+    ) {
+
+        powerSpawnTimer = 0;
+
+
+        if (
+            Math.random() < 0.45
+        ) {
+
+            createPowerCoin();
+
+        }
+
+    }
+
+
+    for (
+        let i =
+            powerCoins.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const coin =
+            powerCoins[i];
+
+
+        coin.y +=
+            coin.speed;
+
+        coin.rotation += 0.08;
+
+
+        if (
+            coin.y >
+            canvas.height + 30
+        ) {
+
+            powerCoins.splice(i, 1);
+
+            continue;
+
+        }
+
+
+        const distance =
+            Math.hypot(
+
+                player.x - coin.x,
+
+                player.y - coin.y
+
+            );
+
+
+        if (
+            distance < 35
+        ) {
+
+            powerLevel++;
+
+            powerEl.textContent =
+                powerLevel;
+
+            powerCoins.splice(i, 1);
+
+
+            createExplosion(
+
+                coin.x,
+
+                coin.y,
+
+                "#ffd32a"
+
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   COLISÃO
+========================================================= */
+
+function circleRectCollision(
+
+    circleX,
+    circleY,
+    radius,
+    rectX,
+    rectY,
+    rectWidth,
+    rectHeight
+
+) {
+
+    const closestX =
+        Math.max(
+
+            rectX,
+
+            Math.min(
+                circleX,
+                rectX + rectWidth
+            )
+
+        );
+
+
+    const closestY =
+        Math.max(
+
+            rectY,
+
+            Math.min(
+                circleY,
+                rectY + rectHeight
+            )
+
+        );
+
+
+    const distanceX =
+        circleX - closestX;
+
+    const distanceY =
+        circleY - closestY;
+
+
+    return (
+
+        distanceX *
+        distanceX +
+
+        distanceY *
+        distanceY
+
+    ) < radius * radius;
+
+}
+
+
+/* =========================================================
+   PERDER VIDA
+========================================================= */
+
+function loseLife() {
+
+    /*
+       MODO DE TESTE:
+
+       Se nvGodMode estiver ligado,
+       nada acontece.
+    */
+
+    if (
+        window.nvGodMode
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        player.invulnerable > 0
+    ) {
+
+        return;
+
+    }
+
+
+    lives--;
+
+    livesEl.textContent =
+        lives;
+
+
+    /*
+       90 frames de invulnerabilidade
+       após tomar dano.
+    */
+
+    player.invulnerable = 90;
+
+
+    createExplosion(
+
+        player.x,
+
+        player.y,
+
+        "#00e5ff"
+
+    );
+
+
+    if (lives <= 0) {
+
+        endGame();
+
+    }
+
+}
+
+
+/* =========================================================
+   EXPLOSÃO
+========================================================= */
+
+function createExplosion(
+    x,
+    y,
+    color
+) {
+
+    for (
+        let i = 0;
+        i < 12;
+        i++
+    ) {
+
+        particles.push({
+
+            x: x,
+
+            y: y,
+
+            vx:
+                (Math.random() - 0.5) *
+                6,
+
+            vy:
+                (Math.random() - 0.5) *
+                6,
+
+            life:
+                30 +
+                Math.random() * 20,
+
+            size:
+                Math.random() * 4 + 1,
+
+            color:
+                color
+
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   PARTÍCULAS
+========================================================= */
+
+function updateParticles() {
+
+    for (
+        let i =
+            particles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const p =
+            particles[i];
+
+
+        p.x += p.vx;
+
+        p.y += p.vy;
+
+        p.life--;
+
+        p.size *= 0.97;
+
+
+        if (
+            p.life <= 0
+        ) {
+
+            particles.splice(i, 1);
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ESTRELAS
+========================================================= */
+
+function updateStars() {
 
     for (
         const star of stars
     ) {
-
-        ctx.fillStyle =
-            "#e1deff";
-
-
-        ctx.globalAlpha =
-            Math.random() * 0.7 + 0.3;
-
-
-        ctx.fillRect(
-
-            star.x,
-            star.y,
-
-            star.size,
-            star.size
-        );
-
 
         star.y +=
             star.speed;
@@ -530,23 +1741,56 @@ function drawBackground() {
             canvas.height
         ) {
 
-            star.y = -5;
-
+            star.y = 0;
 
             star.x =
                 Math.random() *
                 canvas.width;
+
         }
+
+    }
+
+}
+
+
+function drawStars() {
+
+    ctx.fillStyle = "#fff";
+
+
+    for (
+        const star of stars
+    ) {
+
+        ctx.globalAlpha =
+            0.4 +
+            star.size / 3;
+
+
+        ctx.fillRect(
+
+            star.x,
+
+            star.y,
+
+            star.size,
+
+            star.size
+
+        );
+
     }
 
 
     ctx.globalAlpha = 1;
+
 }
 
 
-// ==========================================
-// 🚀 DESENHAR NAVE
-// ==========================================
+/* =========================================================
+   NAVE
+========================================================= */
 
 function drawPlayer() {
 
@@ -554,88 +1798,460 @@ function drawPlayer() {
 
 
     ctx.translate(
-
-        player.x +
-        player.width / 2,
-
-        player.y +
-        player.height / 2
+        player.x,
+        player.y
     );
 
 
-    // Fogo
+    if (
 
-    ctx.fillStyle =
-        "#ff7b00";
+        player.invulnerable > 0 &&
 
+        Math.floor(
+            player.invulnerable / 6
+        ) % 2 === 0
+
+    ) {
+
+        ctx.globalAlpha = 0.3;
+
+    }
+
+
+    /*
+       Fogo
+    */
 
     ctx.beginPath();
 
-
-    ctx.moveTo(
-        -10,
-        20
-    );
-
+    ctx.moveTo(-10, 20);
 
     ctx.lineTo(
         0,
-        35
+        35 +
+        Math.random() * 8
     );
 
+    ctx.lineTo(10, 20);
 
-    ctx.lineTo(
-        10,
-        20
-    );
-
+    ctx.fillStyle =
+        "#ff8c00";
 
     ctx.fill();
 
 
-    // Corpo
-
-    ctx.fillStyle =
-        "#00eaff";
-
+    /*
+       Corpo
+    */
 
     ctx.beginPath();
 
+    ctx.moveTo(0, -28);
 
-    ctx.moveTo(
-        0,
-        -28
-    );
+    ctx.lineTo(-21, 22);
 
+    ctx.lineTo(0, 14);
 
-    ctx.lineTo(
-        -22,
-        25
-    );
-
-
-    ctx.lineTo(
-        0,
-        17
-    );
-
-
-    ctx.lineTo(
-        22,
-        25
-    );
-
+    ctx.lineTo(21, 22);
 
     ctx.closePath();
 
+    ctx.fillStyle =
+        "#00e5ff";
 
     ctx.fill();
 
 
-    // Cabine
+    /*
+       Cabine
+    */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        -5,
+        7,
+        0,
+        Math.PI * 2
+    );
 
     ctx.fillStyle =
-        "#ffffff";
+        "#fff";
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   METEOROS
+========================================================= */
+
+function drawMeteors() {
+
+    for (
+        const meteor of meteors
+    ) {
+
+        ctx.save();
+
+
+        ctx.translate(
+
+            meteor.x +
+            meteor.size / 2,
+
+            meteor.y +
+            meteor.size / 2
+
+        );
+
+
+        ctx.rotate(
+            meteor.rotation
+        );
+
+
+        ctx.beginPath();
+
+
+        const radius =
+            meteor.size / 2;
+
+
+        for (
+            let i = 0;
+            i < 8;
+            i++
+        ) {
+
+            const angle =
+                (Math.PI * 2 / 8) *
+                i;
+
+
+            const variation =
+                radius *
+                (
+                    0.8 +
+                    Math.random() *
+                    0.2
+                );
+
+
+            const x =
+                Math.cos(angle) *
+                variation;
+
+            const y =
+                Math.sin(angle) *
+                variation;
+
+
+            if (i === 0) {
+
+                ctx.moveTo(x, y);
+
+            } else {
+
+                ctx.lineTo(x, y);
+
+            }
+
+        }
+
+
+        ctx.closePath();
+
+        ctx.fillStyle =
+            "#777";
+
+        ctx.fill();
+
+        ctx.strokeStyle =
+            "#aaa";
+
+        ctx.stroke();
+
+
+        ctx.restore();
+
+    }
+
+}
+
+
+/* =========================================================
+   TIROS
+========================================================= */
+
+function drawBullets() {
+
+    ctx.fillStyle =
+        "#00e5ff";
+
+
+    for (
+        const bullet of bullets
+    ) {
+
+        ctx.fillRect(
+
+            bullet.x -
+            bullet.width / 2,
+
+            bullet.y,
+
+            bullet.width,
+
+            bullet.height
+
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   POWER COINS
+========================================================= */
+
+function drawPowerCoins() {
+
+    for (
+        const coin of powerCoins
+    ) {
+
+        ctx.save();
+
+
+        ctx.translate(
+            coin.x,
+            coin.y
+        );
+
+
+        ctx.rotate(
+            coin.rotation
+        );
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+
+            0,
+            0,
+            coin.size,
+            0,
+            Math.PI * 2
+
+        );
+
+
+        ctx.fillStyle =
+            "#ffd32a";
+
+        ctx.fill();
+
+
+        ctx.strokeStyle =
+            "#fff";
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+
+
+        ctx.fillStyle =
+            "#7a5a00";
+
+        ctx.font =
+            "bold 14px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+        ctx.fillText(
+            "⚡",
+            0,
+            1
+        );
+
+
+        ctx.restore();
+
+    }
+
+}
+
+
+/* =========================================================
+   PEDRAS
+========================================================= */
+
+function drawBossProjectiles() {
+
+    for (
+        const projectile of bossProjectiles
+    ) {
+
+        ctx.save();
+
+
+        ctx.translate(
+
+            projectile.x,
+
+            projectile.y
+
+        );
+
+
+        ctx.rotate(
+            projectile.rotation
+        );
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            -projectile.size,
+            0
+        );
+
+
+        ctx.lineTo(
+
+            -projectile.size * 0.3,
+
+            -projectile.size * 0.8
+
+        );
+
+
+        ctx.lineTo(
+
+            projectile.size * 0.8,
+
+            -projectile.size * 0.45
+
+        );
+
+
+        ctx.lineTo(
+
+            projectile.size,
+
+            projectile.size * 0.3
+
+        );
+
+
+        ctx.lineTo(
+
+            projectile.size * 0.2,
+
+            projectile.size
+
+        );
+
+
+        ctx.lineTo(
+
+            -projectile.size * 0.8,
+
+            projectile.size * 0.55
+
+        );
+
+
+        ctx.closePath();
+
+
+        ctx.fillStyle =
+            "#555";
+
+        ctx.fill();
+
+
+        ctx.strokeStyle =
+            projectile.color;
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+
+
+        ctx.restore();
+
+    }
+
+}
+
+
+/* =========================================================
+   BOSS
+========================================================= */
+
+function drawBoss() {
+
+    if (
+        !bossActive ||
+        !currentBoss
+    ) return;
+
+
+    const boss =
+        currentBoss;
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        boss.x,
+        boss.y
+    );
+
+
+    const gradient =
+        ctx.createRadialGradient(
+
+            0,
+            0,
+            boss.size * 0.2,
+
+            0,
+            0,
+            boss.size
+
+        );
+
+
+    gradient.addColorStop(
+        0,
+        boss.color
+    );
+
+
+    gradient.addColorStop(
+        1,
+        boss.darkColor
+    );
+
+
+    ctx.fillStyle =
+        gradient;
 
 
     ctx.beginPath();
@@ -644,65 +2260,73 @@ function drawPlayer() {
     ctx.arc(
 
         0,
-        -8,
-
-        7,
-
+        0,
+        boss.size / 2,
         0,
         Math.PI * 2
+
     );
 
 
     ctx.fill();
 
 
-    ctx.restore();
-}
+    ctx.strokeStyle =
+        boss.color;
+
+    ctx.lineWidth = 5;
+
+    ctx.stroke();
 
 
-// ==========================================
-// ☄️ DESENHAR METEORO
-// ==========================================
+    /*
+       Olho
+    */
 
-function drawMeteor(
-    meteor
-) {
-
-    ctx.save();
-
-
-    ctx.translate(
-
-        meteor.x +
-        meteor.width / 2,
-
-        meteor.y +
-        meteor.height / 2
-    );
-
-
-    ctx.rotate(
-        meteor.rotation
-    );
-
-
-    if (meteor.isBig) {
-
-        ctx.fillStyle =
-            "#9b4d32";
-
-    } else {
-
-        ctx.fillStyle =
-            "#777";
-    }
+    ctx.fillStyle =
+        "#000";
 
 
     ctx.beginPath();
 
+    ctx.arc(
 
-    const radius =
-        meteor.width / 2;
+        0,
+        0,
+        boss.size * 0.16,
+        0,
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle =
+        "#fff";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        0,
+        0,
+        boss.size * 0.08,
+        0,
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+
+    /*
+       Pontas
+    */
+
+    ctx.fillStyle =
+        boss.darkColor;
 
 
     for (
@@ -716,1794 +2340,234 @@ function drawMeteor(
             i;
 
 
-        const randomRadius =
-            radius *
-            (
-                0.75 +
-                Math.random() *
-                0.25
-            );
-
-
-        const x =
-            Math.cos(angle) *
-            randomRadius;
-
-
-        const y =
-            Math.sin(angle) *
-            randomRadius;
-
-
-        if (i === 0) {
-
-            ctx.moveTo(
-                x,
-                y
-            );
-
-        } else {
-
-            ctx.lineTo(
-                x,
-                y
-            );
-        }
-    }
-
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    // Cratera
-
-    ctx.fillStyle =
-        meteor.isBig
-            ? "#54291f"
-            : "#444";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-        -radius * 0.2,
-
-        -radius * 0.1,
-
-        radius * 0.2,
-
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.fill();
-
-
-    // Vida do meteoro grande
-
-    if (meteor.isBig) {
-
-        ctx.fillStyle =
-            "#ffffff";
-
-
-        ctx.font =
-            "bold 14px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.fillText(
-            meteor.health,
-            0,
-            5
-        );
-    }
-
-
-    ctx.restore();
-}
-
-
-// ==========================================
-// 👹 CRIAR BOSS
-// ==========================================
-
-function createBoss(
-    stage
-) {
-
-    // Limpa todos os meteoros normais.
-
-    meteors = [];
-
-
-    bullets = [];
-
-
-    powerCoins = [];
-
-
-    currentBoss = {
-
-        x:
-            canvas.width / 2 -
-            stage.size / 2,
-
-        y: 90,
-
-        width:
-            stage.size,
-
-        height:
-            stage.size,
-
-        speed:
-            stage.speed,
-
-        direction: 1,
-
-        health:
-            stage.health,
-
-        maxHealth:
-            stage.health,
-
-        name:
-            stage.name,
-
-        color:
-            stage.color,
-
-        darkColor:
-            stage.darkColor,
-
-        stage:
-            defeatedBosses + 1,
-
-        powerUpTimer:
-            0
-    };
-
-
-    bossActive = true;
-
-
-    powerSpawnTimer = 0;
-
-
-    bossHud.classList.remove(
-        "hidden"
-    );
-
-
-    bossName.textContent =
-        stage.name;
-
-
-    updateBossHUD();
-}
-
-
-// ==========================================
-// 👹 ATUALIZAR HUD DO BOSS
-// ==========================================
-
-function updateBossHUD() {
-
-    if (
-        !currentBoss
-    ) {
-        return;
-    }
-
-
-    const percentage =
-        Math.max(
-            0,
-            currentBoss.health /
-            currentBoss.maxHealth *
-            100
-        );
-
-
-    bossHealthBar.style.width =
-        percentage + "%";
-
-
-    bossHealthText.textContent =
-        currentBoss.health +
-        " / " +
-        currentBoss.maxHealth;
-}
-
-
-// ==========================================
-// 👹 DESENHAR BOSS
-// ==========================================
-
-function drawBoss() {
-
-    if (
-        !bossActive ||
-        !currentBoss
-    ) {
-        return;
-    }
-
-
-    const boss =
-        currentBoss;
-
-
-    ctx.save();
-
-
-    ctx.translate(
-
-        boss.x +
-        boss.width / 2,
-
-        boss.y +
-        boss.height / 2
-    );
-
-
-    // Brilho externo
-
-    ctx.shadowColor =
-        boss.color;
-
-
-    ctx.shadowBlur =
-        30;
-
-
-    // Corpo
-
-    ctx.fillStyle =
-        boss.darkColor;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-        0,
-        0,
-
-        boss.width / 2,
-
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.fill();
-
-
-    ctx.shadowBlur = 0;
-
-
-    // Anel externo
-
-    ctx.strokeStyle =
-        boss.color;
-
-
-    ctx.lineWidth = 7;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-        0,
-        0,
-
-        boss.width / 2 - 5,
-
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.stroke();
-
-
-    // Núcleo
-
-    ctx.fillStyle =
-        boss.color;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-        0,
-        0,
-
-        boss.width * 0.23,
-
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.fill();
-
-
-    // Olho/núcleo central
-
-    ctx.fillStyle =
-        "#ffffff";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-        0,
-        0,
-
-        boss.width * 0.09,
-
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.fill();
-
-
-    // Detalhes
-
-    ctx.strokeStyle =
-        boss.color;
-
-
-    ctx.lineWidth = 4;
-
-
-    for (
-        let i = 0;
-        i < 8;
-        i++
-    ) {
-
-        const angle =
-            (
-                Math.PI * 2 / 8
-            ) * i;
-
-
-        const x1 =
-            Math.cos(angle) *
-            boss.width *
-            0.30;
-
-
-        const y1 =
-            Math.sin(angle) *
-            boss.width *
-            0.30;
-
-
-        const x2 =
-            Math.cos(angle) *
-            boss.width *
-            0.46;
-
-
-        const y2 =
-            Math.sin(angle) *
-            boss.width *
-            0.46;
-
-
         ctx.beginPath();
 
 
         ctx.moveTo(
-            x1,
-            y1
+
+            Math.cos(angle) *
+            boss.size * 0.25,
+
+            Math.sin(angle) *
+            boss.size * 0.25
+
         );
 
 
         ctx.lineTo(
-            x2,
-            y2
+
+            Math.cos(angle) *
+            boss.size * 0.75,
+
+            Math.sin(angle) *
+            boss.size * 0.75
+
         );
 
 
-        ctx.stroke();
-    }
+        ctx.lineTo(
 
+            Math.cos(angle + 0.2) *
+            boss.size * 0.5,
 
-    ctx.restore();
-}
+            Math.sin(angle + 0.2) *
+            boss.size * 0.5
 
-
-// ==========================================
-// 👹 MOVIMENTO DO BOSS
-// ==========================================
-
-function updateBoss() {
-
-    if (
-        !bossActive ||
-        !currentBoss
-    ) {
-        return;
-    }
-
-
-    const boss =
-        currentBoss;
-
-
-    // Movimento lateral lento
-
-    boss.x +=
-        boss.speed *
-        boss.direction;
-
-
-    if (
-        boss.x <= 10
-    ) {
-
-        boss.x = 10;
-
-        boss.direction = 1;
-    }
-
-
-    if (
-        boss.x +
-        boss.width >=
-        canvas.width - 10
-    ) {
-
-        boss.x =
-            canvas.width -
-            boss.width -
-            10;
-
-        boss.direction = -1;
-    }
-
-
-    // Pequeno movimento vertical
-
-    boss.y =
-        90 +
-        Math.sin(
-            gameTime * 0.025
-        ) * 25;
-
-
-    // ======================================
-    // COLISÃO BOSS X PLAYER
-    // ======================================
-
-    if (
-
-        player.x <
-            boss.x +
-            boss.width &&
-
-        player.x +
-            player.width >
-            boss.x &&
-
-        player.y <
-            boss.y +
-            boss.height &&
-
-        player.y +
-            player.height >
-            boss.y
-
-    ) {
-
-        // O boss tira uma vida,
-        // mas não fica causando dano
-        // a cada frame.
-
-        lives--;
-
-        updateHUD();
-
-
-        // Empurra o jogador para baixo
-
-        player.y += 60;
-
-
-        if (
-            lives <= 0
-        ) {
-
-            endGame();
-
-            return;
-        }
-    }
-
-
-    // ======================================
-    // MOEDAS DE PODER
-    // ======================================
-
-    powerSpawnTimer++;
-
-
-    // Aproximadamente a cada 8-15 segundos,
-    // existe uma chance de aparecer uma moeda.
-
-    if (
-        powerSpawnTimer >=
-        500
-    ) {
-
-        powerSpawnTimer = 0;
-
-
-        if (
-            Math.random() <
-            0.55
-        ) {
-
-            createPowerCoin();
-        }
-    }
-}
-
-
-// ==========================================
-// 🪙 CRIAR MOEDA DE PODER
-// ==========================================
-
-function createPowerCoin() {
-
-    powerCoins.push({
-
-        x:
-            Math.random() *
-            (
-                canvas.width - 30
-            ),
-
-        y:
-            -30,
-
-        size: 22,
-
-        speed:
-            1.5 +
-            Math.random(),
-
-        rotation: 0
-    });
-}
-
-
-// ==========================================
-// 🪙 ATUALIZAR MOEDAS
-// ==========================================
-
-function updatePowerCoins() {
-
-    for (
-        let i =
-            powerCoins.length - 1;
-
-        i >= 0;
-
-        i--
-    ) {
-
-        const coin =
-            powerCoins[i];
-
-
-        coin.y +=
-            coin.speed;
-
-
-        coin.rotation +=
-            0.08;
-
-
-        // Saiu da tela
-
-        if (
-            coin.y >
-            canvas.height + 40
-        ) {
-
-            powerCoins.splice(
-                i,
-                1
-            );
-
-            continue;
-        }
-
-
-        // Colisão com jogador
-
-        if (
-
-            player.x <
-                coin.x +
-                coin.size &&
-
-            player.x +
-                player.width >
-                coin.x &&
-
-            player.y <
-                coin.y +
-                coin.size &&
-
-            player.y +
-                player.height >
-                coin.y
-
-        ) {
-
-            powerLevel++;
-
-
-            updateHUD();
-
-
-            createExplosion(
-
-                coin.x +
-                coin.size / 2,
-
-                coin.y +
-                coin.size / 2
-            );
-
-
-            powerCoins.splice(
-                i,
-                1
-            );
-        }
-    }
-}
-
-
-// ==========================================
-// 🪙 DESENHAR MOEDAS
-// ==========================================
-
-function drawPowerCoins() {
-
-    for (
-        const coin of powerCoins
-    ) {
-
-        ctx.save();
-
-
-        ctx.translate(
-
-            coin.x +
-            coin.size / 2,
-
-            coin.y +
-            coin.size / 2
         );
 
 
-        ctx.rotate(
-            coin.rotation
-        );
-
-
-        ctx.shadowColor =
-            "#ffe600";
-
-
-        ctx.shadowBlur = 20;
-
-
-        ctx.fillStyle =
-            "#ffd700";
-
-
-        ctx.beginPath();
-
-
-        ctx.arc(
-
-            0,
-            0,
-
-            coin.size / 2,
-
-            0,
-            Math.PI * 2
-        );
-
+        ctx.closePath();
 
         ctx.fill();
 
-
-        ctx.shadowBlur = 0;
-
-
-        ctx.strokeStyle =
-            "#fff3a0";
-
-
-        ctx.lineWidth = 2;
-
-
-        ctx.stroke();
-
-
-        ctx.fillStyle =
-            "#5c4500";
-
-
-        ctx.font =
-            "bold 14px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.textBaseline =
-            "middle";
-
-
-        ctx.fillText(
-            "⚡",
-            0,
-            1
-        );
-
-
-        ctx.restore();
     }
-}
-
-
-// ==========================================
-// 👹 VERIFICAR SE DEVE NASCER BOSS
-// ==========================================
-
-function checkBossSpawn() {
-
-    if (
-        bossActive
-    ) {
-        return;
-    }
-
-
-    if (
-        nextBossIndex >=
-        bossStages.length
-    ) {
-        return;
-    }
-
-
-    const nextBoss =
-        bossStages[nextBossIndex];
-
-
-    if (
-        score >=
-        nextBoss.score
-    ) {
-
-        createBoss(
-            nextBoss
-        );
-
-
-        nextBossIndex++;
-    }
-}
-
-
-// ==========================================
-// 🔥 DESENHAR TIRO
-// ==========================================
-
-function drawBullet(
-    bullet
-) {
-
-    ctx.save();
-
-
-    ctx.fillStyle =
-        "#ff0000";
-
-
-    ctx.shadowColor =
-        "#ff00c8";
-
-
-    ctx.shadowBlur = 15;
-
-
-    ctx.fillRect(
-
-        bullet.x,
-        bullet.y,
-
-        bullet.width,
-        bullet.height
-    );
 
 
     ctx.restore();
+
 }
 
 
-// ==========================================
-// 🚀 MOVIMENTO
-// ==========================================
+/* =========================================================
+   PARTÍCULAS
+========================================================= */
 
-function movePlayer() {
+function drawParticles() {
+
+    for (
+        const p of particles
+    ) {
+
+        ctx.globalAlpha =
+            Math.max(
+                0,
+                p.life / 50
+            );
+
+
+        ctx.fillStyle =
+            p.color;
+
+
+        ctx.fillRect(
+
+            p.x,
+
+            p.y,
+
+            p.size,
+
+            p.size
+
+        );
+
+    }
+
+
+    ctx.globalAlpha = 1;
+
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+function updatePlayer() {
 
     if (
-
-        keys["ArrowLeft"] ||
-        keys["a"] ||
-        keys["A"]
-
+        keys["arrowleft"] ||
+        keys["a"]
     ) {
 
         player.x -=
             player.speed;
+
     }
 
 
     if (
-
-        keys["ArrowRight"] ||
-        keys["d"] ||
-        keys["D"]
-
+        keys["arrowright"] ||
+        keys["d"]
     ) {
 
         player.x +=
             player.speed;
+
     }
 
-
-    // Limite esquerdo
 
     if (
-        player.x < 0
+        keys["arrowup"] ||
+        keys["w"]
     ) {
 
-        player.x = 0;
+        player.y -=
+            player.speed;
+
     }
 
-
-    // Limite direito
 
     if (
-
-        player.x +
-        player.width >
-        canvas.width
-
+        keys["arrowdown"] ||
+        keys["s"]
     ) {
 
-        player.x =
-            canvas.width -
-            player.width;
-    }
-}
+        player.y +=
+            player.speed;
 
-
-// ==========================================
-// ☄️ ATUALIZAR METEOROS
-// ==========================================
-
-function updateMeteors() {
-
-    // Nenhum meteoro normal durante boss.
-
-    if (
-        bossActive
-    ) {
-
-        meteors = [];
-
-        return;
     }
 
 
-    meteorTimer++;
-
-
-    const spawnRate =
+    player.x =
         Math.max(
 
-            5,
+            player.width / 2,
 
-            45 -
-            difficulty * 4
+            Math.min(
+
+                canvas.width -
+                player.width / 2,
+
+                player.x
+
+            )
+
+        );
+
+
+    player.y =
+        Math.max(
+
+            player.height / 2,
+
+            Math.min(
+
+                canvas.height -
+                player.height / 2,
+
+                player.y
+
+            )
+
         );
 
 
     if (
-        meteorTimer >=
-        spawnRate
+        player.invulnerable > 0
     ) {
 
-        meteorTimer = 0;
+        player.invulnerable--;
 
-
-        const amount =
-            Math.min(
-
-                1 +
-                Math.floor(
-                    difficulty / 3
-                ),
-
-                7
-            );
-
-
-        for (
-            let i = 0;
-            i < amount;
-            i++
-        ) {
-
-            createMeteor();
-        }
     }
 
-
-    // Movimento dos meteoros
-
-    for (
-        let i =
-            meteors.length - 1;
-
-        i >= 0;
-
-        i--
-    ) {
-
-        const meteor =
-            meteors[i];
-
-
-        meteor.y +=
-            meteor.speed;
-
-
-        meteor.rotation +=
-            meteor.rotationSpeed;
-
-
-        // Saiu da tela
-
-        if (
-            meteor.y >
-            canvas.height +
-            meteor.height
-        ) {
-
-            meteors.splice(
-                i,
-                1
-            );
-
-            continue;
-        }
-
-
-        // Colisão com nave
-
-        if (
-
-            player.x <
-                meteor.x +
-                meteor.width &&
-
-            player.x +
-                player.width >
-                meteor.x &&
-
-            player.y <
-                meteor.y +
-                meteor.height &&
-
-            player.y +
-                player.height >
-                meteor.y
-
-        ) {
-
-            createExplosion(
-
-                meteor.x +
-                meteor.width / 2,
-
-                meteor.y +
-                meteor.height / 2
-            );
-
-
-            meteors.splice(
-                i,
-                1
-            );
-
-
-            lives--;
-
-
-            updateHUD();
-
-
-            if (
-                lives <= 0
-            ) {
-
-                endGame();
-
-                return;
-            }
-        }
-    }
-}
-
-
-// ==========================================
-// 🔫 ATUALIZAR TIROS
-// ==========================================
-
-function updateBullets() {
 
     if (
         shootCooldown > 0
     ) {
 
         shootCooldown--;
-    }
 
-
-    for (
-        let i =
-            bullets.length - 1;
-
-        i >= 0;
-
-        i--
-    ) {
-
-        const bullet =
-            bullets[i];
-
-
-        bullet.y -=
-            bullet.speed;
-
-
-        // Saiu da tela
-
-        if (
-            bullet.y < -30
-        ) {
-
-            bullets.splice(
-                i,
-                1
-            );
-
-            continue;
-        }
-
-
-        // ==================================
-        // 👹 COLISÃO COM BOSS
-        // ==================================
-
-        if (
-            bossActive &&
-            currentBoss
-        ) {
-
-            const boss =
-                currentBoss;
-
-
-            if (
-
-                bullet.x <
-                    boss.x +
-                    boss.width &&
-
-                bullet.x +
-                    bullet.width >
-                    boss.x &&
-
-                bullet.y <
-                    boss.y +
-                    boss.height &&
-
-                bullet.y +
-                    bullet.height >
-                    boss.y
-
-            ) {
-
-                // Dano depende das moedas.
-
-                boss.health -=
-                    powerLevel;
-
-
-                bullets.splice(
-                    i,
-                    1
-                );
-
-
-                createExplosion(
-
-                    bullet.x,
-
-                    bullet.y
-                );
-
-
-                updateBossHUD();
-
-
-                // Boss morreu
-
-                if (
-                    boss.health <= 0
-                ) {
-
-                    defeatBoss();
-                }
-
-
-                continue;
-            }
-        }
-
-
-        // ==================================
-        // ☄️ METEOROS NORMAIS
-        // ==================================
-
-        for (
-            let j =
-                meteors.length - 1;
-
-            j >= 0;
-
-            j--
-        ) {
-
-            const meteor =
-                meteors[j];
-
-
-            if (
-
-                bullet.x <
-                    meteor.x +
-                    meteor.width &&
-
-                bullet.x +
-                    bullet.width >
-                    meteor.x &&
-
-                bullet.y <
-                    meteor.y +
-                    meteor.height &&
-
-                bullet.y +
-                    bullet.height >
-                    meteor.y
-
-            ) {
-
-                meteor.health--;
-
-
-                bullets.splice(
-                    i,
-                    1
-                );
-
-
-                createExplosion(
-
-                    bullet.x,
-
-                    bullet.y
-                );
-
-
-                if (
-                    meteor.health <= 0
-                ) {
-
-                    meteors.splice(
-                        j,
-                        1
-                    );
-
-
-                    if (
-                        meteor.isBig
-                    ) {
-
-                        score += 6;
-
-                    } else {
-
-                        score += 3;
-                    }
-
-
-                    updateHUD();
-
-                }
-
-
-                break;
-            }
-        }
-    }
-}
-
-
-// ==========================================
-// 👹 DERROTAR BOSS
-// ==========================================
-
-function defeatBoss() {
-
-    if (
-        !currentBoss
-    ) {
-        return;
-    }
-
-
-    const boss =
-        currentBoss;
-
-
-    createBossExplosion(
-
-        boss.x +
-        boss.width / 2,
-
-        boss.y +
-        boss.height / 2
-    );
-
-
-    // Pontos extras por derrotar boss
-
-    score +=
-        25 *
-        boss.stage;
-
-
-    defeatedBosses++;
-
-
-    bossActive = false;
-
-    currentBoss = null;
-
-
-    powerCoins = [];
-
-
-    bossHud.classList.add(
-        "hidden"
-    );
-
-
-    updateHUD();
-}
-
-
-// ==========================================
-// 💥 PARTÍCULAS
-// ==========================================
-
-function updateParticles() {
-
-    for (
-        let i =
-            particles.length - 1;
-
-        i >= 0;
-
-        i--
-    ) {
-
-        const particle =
-            particles[i];
-
-
-        particle.x +=
-            particle.speedX;
-
-
-        particle.y +=
-            particle.speedY;
-
-
-        particle.life--;
-
-
-        particle.size *=
-            0.95;
-
-
-        if (
-            particle.life <= 0
-        ) {
-
-            particles.splice(
-                i,
-                1
-            );
-        }
-    }
-}
-
-
-// ==========================================
-// DESENHAR PARTÍCULAS
-// ==========================================
-
-function drawParticles() {
-
-    for (
-        const particle
-        of particles
-    ) {
-
-        ctx.fillStyle =
-            "#ff9d00";
-
-
-        ctx.globalAlpha =
-            particle.life /
-            30;
-
-
-        ctx.beginPath();
-
-
-        ctx.arc(
-
-            particle.x,
-
-            particle.y,
-
-            particle.size,
-
-            0,
-
-            Math.PI * 2
-        );
-
-
-        ctx.fill();
-    }
-
-
-    ctx.globalAlpha = 1;
-}
-
-
-// ==========================================
-// 📈 DIFICULDADE
-// ==========================================
-
-function updateDifficulty() {
-
-    difficulty =
-        1 +
-        Math.floor(
-            gameTime / 600
-        );
-
-
-    player.speed =
-        Math.min(
-
-            7 +
-            difficulty * 0.8,
-
-            player.maxSpeed
-        );
-}
-
-
-// ==========================================
-// HUD
-// ==========================================
-
-function updateHUD() {
-
-    scoreText.textContent =
-        score;
-
-
-    livesText.textContent =
-        lives;
-
-
-    highScoreText.textContent =
-        highScore;
-
-
-    powerText.textContent =
-        powerLevel;
-}
-
-
-// ==========================================
-// 🎮 TECLAS
-// ==========================================
-
-const keys = {};
-
-
-document.addEventListener(
-    "keydown",
-
-    (event) => {
-
-        keys[event.key] = true;
-
-
-        // SPACE = atirar
-
-        if (
-            event.code ===
-            "Space"
-        ) {
-
-            event.preventDefault();
-
-            shoot();
-        }
-
-
-        // Evita rolagem
-
-        if (
-
-            event.code ===
-                "ArrowLeft" ||
-
-            event.code ===
-                "ArrowRight"
-
-        ) {
-
-            event.preventDefault();
-        }
-    }
-);
-
-
-document.addEventListener(
-    "keyup",
-
-    (event) => {
-
-        keys[event.key] = false;
-    }
-);
-
-
-// ==========================================
-// 🔄 LOOP DO JOGO
-// ==========================================
-
-function gameLoop() {
-
-    if (
-        !gameRunning
-    ) {
-
-        return;
-    }
-
-
-    gameTime++;
-
-
-    drawBackground();
-
-
-    movePlayer();
-
-
-    // Boss ou meteoros normais
-
-    if (
-        bossActive
-    ) {
-
-        updateBoss();
-
-        updatePowerCoins();
-
-    } else {
-
-        updateMeteors();
-
-    }
-
-
-    updateBullets();
-
-
-    updateParticles();
-
-
-    updateDifficulty();
-
-
-    // Verifica nascimento do boss
-
-    checkBossSpawn();
-
-
-    // ======================================
-    // DESENHOS
-    // ======================================
-
-    drawPlayer();
-
-
-    for (
-        const meteor
-        of meteors
-    ) {
-
-        drawMeteor(
-            meteor
-        );
     }
 
 
     if (
-        bossActive
+
+        keys[" "] &&
+
+        shootCooldown <= 0
+
     ) {
 
-        drawBoss();
+        shoot();
 
-        drawPowerCoins();
+        shootCooldown = 12;
+
     }
 
-
-    for (
-        const bullet
-        of bullets
-    ) {
-
-        drawBullet(
-            bullet
-        );
-    }
-
-
-    drawParticles();
-
-
-    // ======================================
-    // PONTUAÇÃO PELO TEMPO
-    // ======================================
-
-    if (
-        gameTime % 60 === 0
-    ) {
-
-        score++;
-
-        updateHUD();
-    }
-
-
-    animationId =
-        requestAnimationFrame(
-            gameLoop
-        );
 }
 
 
-// ==========================================
-// ▶️ COMEÇAR JOGO
-// ==========================================
-
-function startGame() {
-
-    // Reset
-
-    score = 0;
-
-    lives = 3;
-
-    difficulty = 1;
-
-    gameTime = 0;
-
-    meteorTimer = 0;
-
-    shootCooldown = 0;
-
-
-    // Reset bosses
-
-    currentBoss = null;
-
-    bossActive = false;
-
-    nextBossIndex = 0;
-
-    defeatedBosses = 0;
-
-
-    // Reset poder
-
-    powerLevel = 1;
-
-    powerSpawnTimer = 0;
-
-
-    meteors = [];
-
-    bullets = [];
-
-    particles = [];
-
-    powerCoins = [];
-
-
-    resetPlayer();
-
-
-    createStars();
-
-
-    updateHUD();
-
-
-    // Telas
-
-    menu.classList.add(
-        "hidden"
-    );
-
-
-    gameOver.classList.add(
-        "hidden"
-    );
-
-
-    game.classList.remove(
-        "hidden"
-    );
-
-
-    bossHud.classList.add(
-        "hidden"
-    );
-
-
-    gameRunning = true;
-
-
-    // ======================================
-    // 🎵 TROCA MÚSICA MENU → JOGO
-    // ======================================
-
-    musicaMenu.pause();
-
-    musicaMenu.currentTime = 0;
-
-
-    musica.currentTime = 0;
-
-
-    musica.play().catch(
-        (error) => {
-
-            console.log(
-                "Não foi possível tocar a música do jogo:",
-                error
-            );
-        }
-    );
-
-
-    cancelAnimationFrame(
-        animationId
-    );
-
-
-    gameLoop();
-}
-
-
-// ==========================================
-// 💀 GAME OVER
-// ==========================================
+/* =========================================================
+   GAME OVER
+========================================================= */
 
 function endGame() {
 
     gameRunning = false;
 
-
-    cancelAnimationFrame(
-        animationId
-    );
+    gameOver = true;
 
 
-    // Para música do jogo
+    finalScoreEl.textContent =
+        score;
 
-    musica.pause();
-
-    musica.currentTime = 0;
-
-
-    // Para música do menu
-
-    musicaMenu.pause();
-
-    musicaMenu.currentTime = 0;
-
-
-    // Verifica recorde
 
     if (
         score > highScore
     ) {
 
-        highScore =
-            score;
+        highScore = score;
 
 
         localStorage.setItem(
@@ -2511,172 +2575,155 @@ function endGame() {
             "naveEscapeHighScore",
 
             highScore
+
         );
+
+
+        highScoreEl.textContent =
+            highScore;
+
     }
 
 
-    // Atualiza textos
-
-    finalScoreText.textContent =
-        score;
+    musicaJogo.pause();
 
 
-    highScoreText.textContent =
-        highScore;
+    gameOverScreen.style.display =
+        "flex";
 
-
-    // Esconde jogo
-
-    game.classList.add(
-        "hidden"
-    );
-
-
-    bossHud.classList.add(
-        "hidden"
-    );
-
-
-    // Mostra Game Over
-
-    gameOver.classList.remove(
-        "hidden"
-    );
 }
 
 
-// ==========================================
-// 🔄 JOGAR NOVAMENTE
-// ==========================================
+/* =========================================================
+   LOOP
+========================================================= */
 
-restartBtn.addEventListener(
-    "click",
+let frameCount = 0;
 
-    () => {
 
-        startGame();
+function gameLoop() {
+
+    if (!gameRunning) return;
+
+
+    frameCount++;
+
+
+    ctx.clearRect(
+
+        0,
+        0,
+        canvas.width,
+        canvas.height
+
+    );
+
+
+    ctx.fillStyle =
+        "#000";
+
+
+    ctx.fillRect(
+
+        0,
+        0,
+        canvas.width,
+        canvas.height
+
+    );
+
+
+    updateStars();
+
+    drawStars();
+
+
+    updatePlayer();
+
+
+    /*
+       Quantidade fixa de meteoros.
+
+       O que muda com o tempo é a velocidade.
+    */
+
+    if (!bossActive) {
+
+        meteorSpawnTimer++;
+
+
+        if (
+            meteorSpawnTimer >= 38
+        ) {
+
+            meteorSpawnTimer = 0;
+
+            createMeteor();
+
+        }
+
     }
-);
 
 
-// ==========================================
-// 🏠 MENU
-// ==========================================
+    updateMeteors();
 
-menuBtn.addEventListener(
-    "click",
+    updateBullets();
 
-    () => {
+    updateBoss();
 
-        gameOver.classList.add(
-            "hidden"
-        );
+    updateBossProjectiles();
 
+    updatePowerCoins();
 
-        game.classList.add(
-            "hidden"
-        );
+    updateParticles();
 
 
-        menu.classList.remove(
-            "hidden"
-        );
+    drawMeteors();
+
+    drawPowerCoins();
+
+    drawBossProjectiles();
+
+    drawBoss();
+
+    drawBullets();
+
+    drawParticles();
+
+    drawPlayer();
 
 
-        bossHud.classList.add(
-            "hidden"
-        );
-
-
-        gameRunning = false;
-
-
-        // Para música do jogo
-
-        musica.pause();
-
-        musica.currentTime = 0;
-
-
-        // Volta música do menu
-
-        musicaMenu.currentTime = 0;
-
-        musicaMenu.play().catch(
-            () => {}
-        );
-    }
-);
-
-
-// ==========================================
-// ▶️ BOTÃO JOGAR
-// ==========================================
-
-playBtn.addEventListener(
-    "click",
-
-    () => {
-
-        startGame();
-    }
-);
-
-
-// ==========================================
-// 🎵 TENTAR INICIAR MÚSICA DO MENU
-// ==========================================
-
-// Alguns navegadores bloqueiam autoplay.
-// Por isso também usamos o primeiro clique
-// do usuário para garantir a música.
-
-function iniciarMusicaMenu() {
+    /*
+       Pontuação continua normalmente,
+       inclusive durante boss.
+    */
 
     if (
-        gameRunning
+        frameCount % 60 === 0
     ) {
-        return;
+
+        score++;
+
+        scoreEl.textContent =
+            score;
+
     }
 
 
-    musicaMenu.play().catch(
-        () => {}
+    checkBossSpawn();
+
+
+    requestAnimationFrame(
+        gameLoop
     );
+
 }
 
 
-document.addEventListener(
-    "click",
-    iniciarMusicaMenu,
-    {
-        once: true
-    }
-);
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
 
+atualizarBotaoSom();
 
-// ==========================================
-// INICIALIZAÇÃO
-// ==========================================
-
-highScoreText.textContent =
-    highScore;
-
-
-createStars();
-
-
-resetPlayer();
-
-
-// Tenta iniciar a música
-// assim que a página abre.
-
-musicaMenu.play().catch(
-    () => {
-
-        console.log(
-            "O navegador bloqueou o autoplay da música do menu."
-        );
-    }
-);
+resetGame();

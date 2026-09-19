@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <!-- =========================
      RODAPÉ / INFORMAÇÕES
 ========================== -->
@@ -20,8 +21,12 @@
 
 <div id="updates">
     <strong>Atualizações</strong>
-    <span>v1.0.0.1-test — Site de testes de desenvolvimento</span>
+
+    <span>
+        v1.0.0.2 — Sistema de Bosses, moedas de poder e música no menu
+    </span>
 </div>
+
 
 <body>
 
@@ -36,19 +41,22 @@
             <h1>🚀 System of Burla</h1>
 
             <div class="version">
-                v1.0.0.1-test
+                v1.0.0.2-test
             </div>
 
         </div>
 
+
         <p class="description">
             Sobreviva aos meteoros, destrua tudo
-            e faça a maior pontuação! 
+            e faça a maior pontuação! E cuidado com o Boss hehehehe
         </p>
+
 
         <button id="startButton">
             JOGAY
         </button>
+
 
         <div class="controls">
 
@@ -59,7 +67,7 @@
             </span>
 
             <span>
-                Spaço — Atirar 🔫
+                Espaço — Atirar 🔫
             </span>
 
         </div>
@@ -89,7 +97,33 @@
                 🔥 <span id="highScore">0</span>
             </div>
 
+            <div class="hudBox powerBox">
+                ⚡ <span id="power">1</span>x
+            </div>
+
         </div>
+
+
+        <!-- INDICADOR DO BOSS -->
+
+        <div id="bossHud" class="hidden">
+
+            <div id="bossName">
+                BOSS
+            </div>
+
+            <div id="bossBar">
+
+                <div id="bossHealth"></div>
+
+            </div>
+
+            <div id="bossHealthText">
+                0 / 0
+            </div>
+
+        </div>
+
 
         <canvas id="gameCanvas"></canvas>
 

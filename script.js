@@ -62,9 +62,9 @@ const laserSound = document.getElementById("laserSound");
 
 let soundEnabled = true;
 
-menuMusic.volume = 0.40;
-gameMusic.volume = 0.40;
-laserSound.volume = 0.055;
+menuMusic.volume = 0.3;
+gameMusic.volume = 0.3;
+laserSound.volume = 0.1;
 
 
 /*
@@ -103,7 +103,7 @@ function tocarMusicaMenu() {
 
     gameMusic.pause();
 
-    menuMusic.volume = 0.40;
+    menuMusic.volume = 0.4;
 
     menuMusic.play().catch((error) => {
         console.warn("⚠️ Não foi possível iniciar a música do menu:", error);
@@ -119,7 +119,7 @@ function tocarMusicaJogo() {
     menuMusic.pause();
 
     gameMusic.currentTime = 0;
-    gameMusic.volume = 0.40;
+    gameMusic.volume = 0.4;
 
     gameMusic.play().catch((error) => {
         console.warn("⚠️ Não foi possível iniciar a música do jogo:", error);
@@ -451,7 +451,7 @@ function shoot() {
         const shot =
             new Audio("music/laser.mp3");
 
-        shot.volume = 0.055;
+        shot.volume = 0.1;
 
         shot.play().catch((error) => {
             console.warn("⚠️ Não foi possível reproduzir o laser:", error);

@@ -1,5 +1,5 @@
 /* ==========================================
-   🚀 NAVE ESCAPE - v1.0.0.5
+   🚀 NAVE ESCAPE 
 ========================================== */
 
 * {
@@ -10,11 +10,19 @@
 
 html,
 body {
+
     width: 100%;
     height: 100%;
+
     overflow: hidden;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     background: #02040a;
+
     color: white;
 }
 
@@ -33,13 +41,16 @@ body {
 ========================================== */
 
 #menu {
+
     width: 100%;
     height: 100vh;
 
     display: flex;
+
     flex-direction: column;
 
     justify-content: center;
+
     align-items: center;
 
     text-align: center;
@@ -59,7 +70,12 @@ body {
 
 .title h1 {
 
-    font-size: clamp(40px, 7vw, 80px);
+    font-size:
+        clamp(
+            40px,
+            7vw,
+            80px
+        );
 
     letter-spacing: 5px;
 
@@ -72,6 +88,7 @@ body {
 
     margin-bottom: 10px;
 }
+
 
 .version {
 
@@ -117,11 +134,12 @@ button {
 
     color: white;
 
-    background: linear-gradient(
-        135deg,
-        #0077ff,
-        #00c8ff
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #0077ff,
+            #00c8ff
+        );
 
     padding: 15px 45px;
 
@@ -134,20 +152,34 @@ button {
     letter-spacing: 2px;
 
     box-shadow:
-        0 0 15px rgba(0, 200, 255, 0.5);
+        0 0 15px
+        rgba(
+            0,
+            200,
+            255,
+            0.5
+        );
 
     transition:
         transform 0.2s,
         box-shadow 0.2s;
 }
 
+
 button:hover {
 
     transform: scale(1.06);
 
     box-shadow:
-        0 0 30px rgba(0, 220, 255, 0.8);
+        0 0 30px
+        rgba(
+            0,
+            220,
+            255,
+            0.8
+        );
 }
+
 
 button:active {
 
@@ -172,6 +204,7 @@ button:active {
     color: #a9c7d8;
 }
 
+
 .controls p {
 
     color: #00eaff;
@@ -195,6 +228,7 @@ button:active {
     inset: 0;
 
     width: 100%;
+
     height: 100%;
 
     background: #02040a;
@@ -228,9 +262,11 @@ button:active {
     position: absolute;
 
     top: 20px;
+
     left: 50%;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
     z-index: 10;
 
@@ -238,6 +274,7 @@ button:active {
 
     gap: 12px;
 }
+
 
 .hudBox {
 
@@ -255,14 +292,177 @@ button:active {
 
     color: white;
 
-    background: rgba(5, 15, 30, 0.8);
+    background:
+        rgba(
+            5,
+            15,
+            30,
+            0.8
+        );
 
-    border: 1px solid rgba(0, 220, 255, 0.5);
+    border:
+        1px solid
+        rgba(
+            0,
+            220,
+            255,
+            0.5
+        );
 
     box-shadow:
-        0 0 15px rgba(0, 180, 255, 0.15);
+        0 0 15px
+        rgba(
+            0,
+            180,
+            255,
+            0.15
+        );
 
-    backdrop-filter: blur(5px);
+    backdrop-filter:
+        blur(5px);
+}
+
+
+/* ==========================================
+   ⚡ PODER
+========================================== */
+
+.powerBox {
+
+    color: #ffe600;
+
+    border-color:
+        rgba(
+            255,
+            230,
+            0,
+            0.6
+        );
+
+    box-shadow:
+        0 0 15px
+        rgba(
+            255,
+            220,
+            0,
+            0.2
+        );
+}
+
+
+/* ==========================================
+   👹 BOSS HUD
+========================================== */
+
+#bossHud {
+
+    position: absolute;
+
+    top: 85px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: min(
+        500px,
+        70%
+    );
+
+    z-index: 20;
+
+    text-align: center;
+}
+
+
+#bossName {
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    letter-spacing: 4px;
+
+    color: #ff4757;
+
+    text-shadow:
+        0 0 10px #ff4757,
+        0 0 20px #ff0000;
+
+    margin-bottom: 7px;
+}
+
+
+#bossBar {
+
+    width: 100%;
+
+    height: 18px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.75
+        );
+
+    border:
+        2px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.4
+        );
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 0 20px
+        rgba(
+            255,
+            0,
+            0,
+            0.35
+        );
+}
+
+
+#bossHealth {
+
+    width: 100%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff0000,
+            #ff6b00
+        );
+
+    transition:
+        width 0.15s;
+}
+
+
+#bossHealthText {
+
+    margin-top: 4px;
+
+    font-size: 13px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.8
+        );
 }
 
 
@@ -285,7 +485,12 @@ button:active {
     align-items: center;
 
     background:
-        rgba(0, 0, 0, 0.82);
+        rgba(
+            0,
+            0,
+            0,
+            0.82
+        );
 }
 
 
@@ -295,7 +500,11 @@ button:active {
 
 .gameOverBox {
 
-    width: min(90%, 450px);
+    width:
+        min(
+            90%,
+            450px
+        );
 
     padding: 45px 30px;
 
@@ -310,11 +519,19 @@ button:active {
             #02050b
         );
 
-    border: 1px solid #00cfff;
+    border:
+        1px solid #00cfff;
 
     box-shadow:
-        0 0 40px rgba(0, 200, 255, 0.25);
+        0 0 40px
+        rgba(
+            0,
+            200,
+            255,
+            0.25
+        );
 }
+
 
 .gameOverBox h1 {
 
@@ -325,8 +542,15 @@ button:active {
     margin-bottom: 20px;
 
     text-shadow:
-        0 0 15px rgba(255, 71, 87, 0.7);
+        0 0 15px
+        rgba(
+            255,
+            71,
+            87,
+            0.7
+        );
 }
+
 
 .gameOverBox p {
 
@@ -336,6 +560,7 @@ button:active {
 
     margin-bottom: 5px;
 }
+
 
 .gameOverBox h2 {
 
@@ -349,6 +574,7 @@ button:active {
         0 0 20px #00eaff;
 }
 
+
 .gameOverBox button {
 
     display: block;
@@ -356,6 +582,107 @@ button:active {
     width: 100%;
 
     margin-top: 12px;
+}
+
+
+/* ==========================================
+   RODAPÉ / INFORMAÇÕES
+========================================== */
+
+#credit {
+
+    position: fixed;
+
+    right: 12px;
+
+    bottom: 8px;
+
+    font-size: 10px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.45
+        );
+
+    z-index: 9999;
+
+    pointer-events: none;
+}
+
+
+#updates {
+
+    position: fixed;
+
+    left: 12px;
+
+    bottom: 8px;
+
+    width: 250px;
+
+    padding: 7px 10px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.45
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
+
+    border-radius: 6px;
+
+    font-size: 10px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.55
+        );
+
+    z-index: 9999;
+
+    pointer-events: none;
+}
+
+
+#updates strong {
+
+    display: block;
+
+    font-size: 11px;
+
+    color:
+        rgba(
+            0,
+            234,
+            255,
+            0.75
+        );
+
+    margin-bottom: 3px;
+}
+
+
+#updates span {
+
+    display: block;
+
+    line-height: 1.4;
 }
 
 
@@ -372,86 +699,69 @@ button:active {
         letter-spacing: 2px;
     }
 
+
     .description {
 
         font-size: 15px;
     }
 
+
+    .hud {
+
+        gap: 5px;
+    }
+
+
+    #hud {
+
+        gap: 5px;
+    }
+
+
     .hudBox {
 
-        min-width: 75px;
+        min-width: 65px;
 
-        padding: 8px 10px;
+        padding: 8px 8px;
 
-        font-size: 14px;
+        font-size: 13px;
     }
+
+
+    #bossHud {
+
+        top: 75px;
+
+        width: 80%;
+    }
+
+
+    #bossName {
+
+        font-size: 17px;
+    }
+
 
     .gameOverBox h1 {
 
         font-size: 30px;
     }
 
+
     .gameOverBox h2 {
 
         font-size: 50px;
     }
 
-    /* =========================
-   RODAPÉ / INFORMAÇÕES
-========================= */
 
-#credit {
-    position: fixed;
-    right: 12px;
-    bottom: 8px;
+    #updates {
 
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.45);
-
-    z-index: 9999;
-
-    pointer-events: none;
-}
+        width: 190px;
+    }
 
 
-#updates {
-    position: fixed;
-    left: 12px;
-    bottom: 8px;
+    #credit {
 
-    width: 220px;
-
-    padding: 7px 10px;
-
-    background: rgba(0, 0, 0, 0.45);
-
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 6px;
-
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.55);
-
-    z-index: 9999;
-
-    pointer-events: none;
-}
-
-
-#updates strong {
-    display: block;
-
-    font-size: 11px;
-
-    color: rgba(0, 234, 255, 0.75);
-
-    margin-bottom: 3px;
-}
-
-
-#updates span {
-    display: block;
-
-    line-height: 1.4;
-}
-
+        font-size: 8px;
+    }
 }

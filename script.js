@@ -64,13 +64,38 @@ let soundEnabled = true;
 
 menuMusic.volume = 0.40;
 gameMusic.volume = 0.40;
-
-/*
-    O tiro agora fica MUITO mais baixo que a música.
-*/
 laserSound.volume = 0.055;
 
+
+/*
+    Garante que os arquivos sejam carregados.
+*/
+
+menuMusic.load();
+gameMusic.load();
+laserSound.load();
+
+
+/*
+    Mostra no console caso algum arquivo de áudio
+    não seja encontrado ou não possa ser carregado.
+*/
+
+menuMusic.addEventListener("error", () => {
+    console.error("❌ Erro ao carregar music/MS1stM.mp3");
+});
+
+gameMusic.addEventListener("error", () => {
+    console.error("❌ Erro ao carregar music/NoSuprises.mp3");
+});
+
+laserSound.addEventListener("error", () => {
+    console.error("❌ Erro ao carregar music/laser.mp3");
+});
+
+
 const soundBtn = document.getElementById("soundBtn");
+
 
 function tocarMusicaMenu() {
 
@@ -80,8 +105,12 @@ function tocarMusicaMenu() {
 
     menuMusic.volume = 0.40;
 
-    menuMusic.play().catch(() => {});
+    menuMusic.play().catch((error) => {
+        console.warn("⚠️ Não foi possível iniciar a música do menu:", error);
+    });
+
 }
+
 
 function tocarMusicaJogo() {
 
@@ -92,14 +121,20 @@ function tocarMusicaJogo() {
     gameMusic.currentTime = 0;
     gameMusic.volume = 0.40;
 
-    gameMusic.play().catch(() => {});
+    gameMusic.play().catch((error) => {
+        console.warn("⚠️ Não foi possível iniciar a música do jogo:", error);
+    });
+
 }
+
 
 function pararMusicas() {
 
     menuMusic.pause();
     gameMusic.pause();
+
 }
+
 
 soundBtn.addEventListener("click", () => {
 
@@ -121,6 +156,7 @@ soundBtn.addEventListener("click", () => {
 
         menuMusic.pause();
         gameMusic.pause();
+
     }
 
 });
@@ -139,6 +175,7 @@ function fecharWelcome() {
     welcomeOverlay.classList.add("hidden");
 
     tocarMusicaMenu();
+
 }
 
 closeWelcome.addEventListener("click", fecharWelcome);
@@ -403,16 +440,22 @@ function shoot() {
 
     /*
         Som do tiro MUITO baixo.
+
+        Criamos um novo áudio para cada tiro,
+        permitindo que os disparos sejam reproduzidos
+        sem depender do estado do elemento original.
     */
 
     if (soundEnabled) {
 
         const shot =
-            laserSound.cloneNode();
+            new Audio("music/laser.mp3");
 
         shot.volume = 0.055;
 
-        shot.play().catch(() => {});
+        shot.play().catch((error) => {
+            console.warn("⚠️ Não foi possível reproduzir o laser:", error);
+        });
 
     }
 
@@ -599,12 +642,22 @@ function atualizarBossHud() {
 
 
 /* =========================================================
-   PROJÉTIL TELEGUIDADO
+   PROJÉTIL DO BOSS
 ========================================================= */
 
 function criarProjetilTeleguiado() {
 
     if (!boss) return;
+
+
+    /*
+        A direção é calculada SOMENTE neste momento.
+
+        O projétil pega a posição atual do jogador
+        e segue em linha reta depois do disparo.
+
+        Ele NÃO acompanha o jogador.
+    */
 
     const dx =
         player.x - boss.x;
@@ -633,7 +686,7 @@ function criarProjetilTeleguiado() {
 
         vy: (dy / distance) * speed,
 
-        homing: true,
+        homing: false,
 
         life: 500,
 
@@ -705,7 +758,8 @@ function bossShoot() {
 
     /*
         Pedra principal:
-        continua teleguiada.
+        segue em linha reta na direção
+        da posição do jogador no disparo.
     */
 
     criarProjetilTeleguiado();
@@ -1075,51 +1129,12 @@ function updateBossProjectiles() {
 
 
         /*
-            Pedra teleguiada continua
-            seguindo o jogador.
+            Os projéteis agora seguem somente
+            a velocidade/direção definida no momento
+            do disparo.
+
+            NÃO existe mais correção de trajetória.
         */
-
-        if (projectile.homing) {
-
-            const dx =
-                player.x -
-                projectile.x;
-
-            const dy =
-                player.y -
-                projectile.y;
-
-            const distance =
-                Math.sqrt(
-                    dx * dx +
-                    dy * dy
-                ) || 1;
-
-            const desiredVx =
-                (dx / distance) *
-                (boss?.projectileSpeed || 5);
-
-            const desiredVy =
-                (dy / distance) *
-                (boss?.projectileSpeed || 5);
-
-
-            /*
-                Pequena correção de trajetória.
-            */
-
-            projectile.vx +=
-                (desiredVx -
-                    projectile.vx) *
-                0.025;
-
-            projectile.vy +=
-                (desiredVy -
-                    projectile.vy) *
-                0.025;
-
-        }
-
 
         projectile.x +=
             projectile.vx;
@@ -1133,7 +1148,7 @@ function updateBossProjectiles() {
         /*
             COLISÃO COM JOGADOR
 
-            As pedras teleguiadas matam
+            Os projéteis vermelhos matam
             instantaneamente.
         */
 
@@ -2292,8 +2307,11 @@ function drawBossProjectiles() {
         );
 
         /*
-            Teleguiadas:
-            maiores e vermelhas.
+            Vermelhos:
+            maiores e perigosos.
+
+            Cinzas:
+            pedrinhas aleatórias.
         */
 
         if (

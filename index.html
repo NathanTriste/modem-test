@@ -1,84 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Nave Escape</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
     <!-- BOTÃO DE SOM -->
     <button id="soundBtn" class="sound-btn">🔊</button>
 
-
-    <!-- POPUP INICIAL -->
-
+    <!-- POPUP DE BOAS-VINDAS -->
     <div id="welcomeOverlay" class="welcome-overlay">
-
         <div class="welcome-box">
 
-            <button id="closeWelcome" class="close-welcome">
-                ✕
-            </button>
+            <button id="closeWelcome" class="welcome-close">✕</button>
 
-            <div class="welcome-icon">
-                🚀
-            </div>
+            <div class="welcome-icon">🚀</div>
 
-            <h2>
-                Bem-vindo ao System of Burla!
-            </h2>
+            <h2>BEM-VINDO</h2>
 
             <p>
                 Prepare-se para sobreviver aos meteoros,
-                enfrentar bosses e tentar conseguir a maior pontuação.
+                enfrentar bosses e tentar chegar aos
+                <strong>2000 pontos...</strong>
             </p>
 
-            <p class="welcome-small">
-                ⚠️ Recomendamos jogar com o som ligado.
+            <p class="welcome-warning">
+                ⚠️ O jogo não vai pegar leve.
             </p>
 
-            <button id="enterGame" class="welcome-button">
+            <button id="enterGame" class="welcome-btn">
                 ENTRAR NO JOGO
             </button>
 
         </div>
-
     </div>
 
 
     <!-- MENU -->
+    <div id="menu" class="screen">
 
-    <div id="menu">
+        <div class="menu-content">
 
-        <h1>
-            🚀 System of Burla
-        </h1>
+            <h1>🚀 System of Burla</h1>
 
-        <p>
-            Sobreviva aos meteoros, destrua tudo e faça a maior pontuação!
-        </p>
+            <p class="subtitle">
+                Sobreviva aos meteoros, destrua tudo e faça a maior pontuação!
+            </p>
 
-        <button id="startBtn">
-            JOGAY
-        </button>
+            <button id="startBtn" class="main-btn">
+                JOGAY
+            </button>
 
-        <div class="controls">
+            <div class="controls">
 
-            <strong>CONTROLES</strong>
+                <h3>CONTROLES</h3>
 
-            <br><br>
+                <p>⬅️ ➡️ ou A / D — Mover</p>
+                <p>SPACE — Atirar</p>
 
-            ⬅️ ➡️ ou A / D — Mover
-
-            <br>
-
-            SPACE — Atirar
+            </div>
 
         </div>
 
@@ -86,74 +69,84 @@
 
 
     <!-- JOGO -->
-
-    <div id="game" style="display: none;">
+    <div id="game" class="screen hidden">
 
         <canvas id="gameCanvas"></canvas>
 
-
-        <!-- HUD -->
-
         <div id="hud">
 
-            <div class="hud-box">
-                💥 <span id="score">0</span>
+            <div class="hud-item">
+                PONTOS:
+                <span id="score">0</span>
             </div>
 
-            <div class="hud-box">
-                ❤️ <span id="lives">3</span>
+            <div class="hud-item">
+                VIDAS:
+                <span id="lives">3</span>
             </div>
 
-            <div class="hud-box">
-                🏆 <span id="highScore">0</span>
+            <div class="hud-item">
+                RECORDE:
+                <span id="highScore">0</span>
             </div>
 
-            <div class="hud-box power-box">
-                ⚡ <span id="power">1</span>x
-            </div>
-
-        </div>
-
-
-        <!-- HUD BOSS -->
-
-        <div id="bossHud" class="boss-hud">
-
-            <div id="bossName">
-                ⚠ BOSS ⚠
-            </div>
-
-            <div class="boss-health-container">
-
-                <div id="bossHealthBar"></div>
-
-            </div>
-
-            <div id="bossHealthText">
-                0 / 0
+            <div class="hud-item power">
+                POWER:
+                <span id="powerLevel">1</span>
             </div>
 
         </div>
 
 
-        <!-- GAME OVER -->
+        <!-- HUD DO BOSS -->
+        <div id="bossHud" class="boss-hud hidden">
 
-        <div id="gameOver">
+            <div class="boss-name" id="bossName">
+                BOSS
+            </div>
 
-            <h2>
-                💥 PERDEU FI
-            </h2>
+            <div class="boss-bar-container">
+                <div id="bossBar" class="boss-bar"></div>
+            </div>
+
+            <div class="boss-hp-text">
+                HP:
+                <span id="bossHpText">0</span>
+            </div>
+
+        </div>
+
+
+        <!-- AVISO DE BOSS -->
+        <div id="bossWarning" class="boss-warning hidden">
+            ⚠️ BOSS INCOMING ⚠️
+        </div>
+
+    </div>
+
+
+    <!-- GAME OVER -->
+    <div id="gameOver" class="screen hidden">
+
+        <div class="gameover-content">
+
+            <h1>💥 PERDEU FI</h1>
 
             <p>
                 Pontuação:
-                <span id="finalScore">0</span>
+                <strong id="finalScore">0</strong>
             </p>
 
-            <button id="restartBtn">
+            <p>
+                Recorde:
+                <strong id="finalHighScore">0</strong>
+            </p>
+
+            <button id="restartBtn" class="main-btn">
                 JOGAR NOVAMENTE
             </button>
 
-            <button id="menuBtn">
+            <button id="menuBtn" class="secondary-btn">
                 MENU
             </button>
 
@@ -162,32 +155,37 @@
     </div>
 
 
-    <!-- ATUALIZAÇÕES -->
-
-    <div id="updates">
-
-        <strong>Atualizações</strong>
-
+    <!-- RODAPÉ -->
+    <div class="footer-left">
+        <strong>Atualizações:</strong>
         <br>
-
-        v1.0.0.7 — Bosses reformulados,
-        projéteis, dificuldade progressiva
-        e sistema de som.
-
+        • Sistema de bosses
+        <br>
+        • Power coins
+        <br>
+        • Boss 2000 em desenvolvimento
     </div>
 
-
-    <!-- CRÉDITO -->
-
-    <div id="credit">
-
+    <div class="footer-right">
         Criado e desenvolvido com total auxílio do ChatGPT
-
     </div>
+
+
+    <!-- ÁUDIOS -->
+    <audio id="menuMusic" loop>
+        <source src="music/MS1stM.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="gameMusic" loop>
+        <source src="music/NoSuprises.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="laserSound">
+        <source src="music/laser.mp3" type="audio/mpeg">
+    </audio>
 
 
     <script src="script.js"></script>
 
 </body>
-
 </html>

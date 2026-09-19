@@ -1,225 +1,42 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
 }
 
 body {
-
-    width: 100vw;
-    height: 100vh;
-
-    overflow: hidden;
-
-    background: #000;
-
-    color: white;
-
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-
-/* =========================
-   BOTÃO DE SOM
-========================= */
-
-.sound-btn {
-
-    position: fixed;
-
-    top: 18px;
-    right: 18px;
-
-    z-index: 10000;
-
-    width: 48px;
-    height: 48px;
-
-    border: 1px solid rgba(255,255,255,0.25);
-
-    border-radius: 12px;
-
-    background: rgba(10,10,20,0.85);
-
-    color: white;
-
-    font-size: 23px;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-
-    backdrop-filter: blur(8px);
-}
-
-.sound-btn:hover {
-
-    transform: scale(1.08);
-
-    background: rgba(35,35,55,0.95);
-}
-
-
-/* =========================
-   POPUP
-========================= */
-
-.welcome-overlay {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 9000;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    background: rgba(0,0,0,0.82);
-
-    backdrop-filter: blur(7px);
-}
-
-
-.welcome-box {
-
     position: relative;
-
-    width: min(500px, 90%);
-
-    padding: 35px;
-
-    text-align: center;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(20,20,35,0.98),
-            rgba(5,5,15,0.98)
-        );
-
-    border: 1px solid rgba(0,220,255,0.45);
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 0 40px rgba(0,200,255,0.12);
-
-    animation: welcomeAppear 0.35s ease;
 }
 
 
-@keyframes welcomeAppear {
+/* =========================
+   UTILIDADES
+========================= */
 
-    from {
-
-        opacity: 0;
-
-        transform: scale(0.85);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform: scale(1);
-
-    }
-
+.hidden {
+    display: none !important;
 }
 
 
-.welcome-icon {
+/* =========================
+   TELAS
+========================= */
 
-    font-size: 55px;
-
-    margin-bottom: 10px;
-}
-
-
-.welcome-box h2 {
-
-    margin-bottom: 15px;
-
-    color: #00e5ff;
-}
-
-
-.welcome-box p {
-
-    line-height: 1.6;
-
-    color: #ddd;
-}
-
-
-.welcome-small {
-
-    margin-top: 15px;
-
-    font-size: 13px;
-
-    color: #aaa !important;
-}
-
-
-.close-welcome {
-
+.screen {
     position: absolute;
-
-    top: 10px;
-    right: 12px;
-
-    border: none;
-
-    background: transparent;
-
-    color: #aaa;
-
-    font-size: 24px;
-
-    cursor: pointer;
-}
-
-
-.close-welcome:hover {
-
-    color: white;
-
-}
-
-
-.welcome-button {
-
-    margin-top: 25px;
-
-    padding: 13px 25px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    background: #00c8ff;
-
-    color: #001018;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-}
-
-
-.welcome-button:hover {
-
-    transform: scale(1.05);
-
-    background: #27d8ff;
+    inset: 0;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -228,121 +45,293 @@ body {
 ========================= */
 
 #menu {
-
-    width: 100vw;
-    height: 100vh;
-
     display: flex;
-
-    flex-direction: column;
-
+    align-items: center;
     justify-content: center;
 
-    align-items: center;
-
-    text-align: center;
-
     background:
-        radial-gradient(
-            circle at center,
-            #10152b 0%,
-            #03040b 60%,
-            #000 100%
-        );
+        radial-gradient(circle at center, #101b30 0%, #050810 45%, #000 100%);
 }
 
+.menu-content {
+    text-align: center;
+    width: min(700px, 90%);
+}
 
-#menu h1 {
+.menu-content h1 {
+    font-size: clamp(40px, 7vw, 82px);
+    margin-bottom: 20px;
 
-    font-size: clamp(38px, 6vw, 75px);
-
-    margin-bottom: 15px;
-
-    color: #00e5ff;
+    color: #00eaff;
 
     text-shadow:
-        0 0 15px rgba(0,220,255,0.5);
+        0 0 10px #00eaff,
+        0 0 25px #00eaff,
+        0 0 50px rgba(0, 234, 255, 0.6);
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #b8c7d9;
+    margin-bottom: 35px;
 }
 
 
-#menu p {
+/* =========================
+   BOTÕES
+========================= */
+
+.main-btn {
+    border: 2px solid #00eaff;
+
+    background: rgba(0, 234, 255, 0.08);
+
+    color: #00eaff;
+
+    padding: 15px 45px;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border-radius: 8px;
+
+    transition: 0.2s;
+
+    text-shadow: 0 0 8px #00eaff;
+
+    box-shadow:
+        0 0 10px rgba(0, 234, 255, 0.25),
+        inset 0 0 10px rgba(0, 234, 255, 0.08);
+}
+
+.main-btn:hover {
+    background: rgba(0, 234, 255, 0.2);
+
+    transform: scale(1.05);
+
+    box-shadow:
+        0 0 15px #00eaff,
+        0 0 30px rgba(0, 234, 255, 0.35);
+}
+
+.secondary-btn {
+    margin-top: 15px;
+
+    padding: 10px 30px;
+
+    background: transparent;
+
+    border: 1px solid #777;
 
     color: #aaa;
 
-    margin-bottom: 30px;
+    border-radius: 6px;
 
-    font-size: 17px;
+    cursor: pointer;
+}
+
+.secondary-btn:hover {
+    color: white;
+    border-color: white;
 }
 
 
-#startBtn {
+/* =========================
+   CONTROLES
+========================= */
 
-    padding: 16px 45px;
+.controls {
+    margin-top: 50px;
 
-    font-size: 22px;
+    color: #8795a8;
 
-    font-weight: bold;
+    line-height: 1.8;
+}
 
-    border: none;
+.controls h3 {
+    color: #00eaff;
+    margin-bottom: 8px;
+}
 
-    border-radius: 10px;
 
-    background: #00d9ff;
+/* =========================
+   BOTÃO SOM
+========================= */
 
-    color: #001016;
+.sound-btn {
+    position: fixed;
+
+    top: 20px;
+    right: 20px;
+
+    width: 48px;
+    height: 48px;
+
+    z-index: 10000;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    border: 1px solid #00eaff;
+
+    border-radius: 50%;
+
+    color: white;
+
+    font-size: 21px;
 
     cursor: pointer;
 
     transition: 0.2s;
 }
 
-
-#startBtn:hover {
-
-    transform: scale(1.08);
+.sound-btn:hover {
+    transform: scale(1.1);
 
     box-shadow:
-        0 0 25px rgba(0,220,255,0.5);
-}
-
-
-.controls {
-
-    margin-top: 35px;
-
-    color: #777;
-
-    line-height: 1.6;
-
-    font-size: 14px;
+        0 0 10px #00eaff;
 }
 
 
 /* =========================
-   JOGO
+   POPUP
 ========================= */
 
-#game {
-
-    width: 100vw;
-    height: 100vh;
-
-    position: relative;
-
-    background: #000;
-}
-
-
-#gameCanvas {
-
-    position: absolute;
+.welcome-overlay {
+    position: fixed;
 
     inset: 0;
 
+    z-index: 9000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.82);
+
+    backdrop-filter: blur(5px);
+}
+
+.welcome-box {
+    position: relative;
+
+    width: min(460px, 90%);
+
+    padding: 35px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #111827,
+            #05070c
+        );
+
+    border: 1px solid #00eaff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 0 20px rgba(0, 234, 255, 0.25),
+        0 0 70px rgba(0, 0, 0, 0.8);
+}
+
+.welcome-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.welcome-box h2 {
+    color: #00eaff;
+
+    font-size: 30px;
+
+    margin-bottom: 15px;
+
+    text-shadow:
+        0 0 10px #00eaff;
+}
+
+.welcome-box p {
+    color: #c6d0dc;
+
+    line-height: 1.6;
+
+    margin-bottom: 15px;
+}
+
+.welcome-warning {
+    color: #ffb300 !important;
+
+    font-weight: bold;
+}
+
+.welcome-close {
+    position: absolute;
+
+    top: 10px;
+    right: 12px;
+
+    background: transparent;
+
+    border: none;
+
+    color: #aaa;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+.welcome-close:hover {
+    color: white;
+}
+
+.welcome-btn {
+    margin-top: 10px;
+
+    padding: 13px 28px;
+
+    border: 1px solid #00eaff;
+
+    background: #00eaff;
+
+    color: #001014;
+
+    font-weight: bold;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.welcome-btn:hover {
+    transform: scale(1.04);
+
+    box-shadow:
+        0 0 15px #00eaff;
+}
+
+
+/* =========================
+   CANVAS
+========================= */
+
+#game {
+    background: #000;
+}
+
+#gameCanvas {
+    display: block;
+
     width: 100%;
     height: 100%;
-
-    display: block;
 
     background: #000;
 }
@@ -353,7 +342,6 @@ body {
 ========================= */
 
 #hud {
-
     position: absolute;
 
     top: 20px;
@@ -361,61 +349,64 @@ body {
 
     display: flex;
 
-    gap: 10px;
+    gap: 20px;
 
-    z-index: 10;
+    z-index: 100;
 }
 
+.hud-item {
+    padding: 8px 12px;
 
-.hud-box {
+    background: rgba(0, 0, 0, 0.5);
 
-    padding: 9px 14px;
+    border: 1px solid rgba(0, 234, 255, 0.4);
 
-    border-radius: 8px;
+    border-radius: 5px;
 
-    background: rgba(10,10,20,0.7);
+    font-size: 14px;
 
-    border: 1px solid rgba(255,255,255,0.12);
+    color: #aaa;
+}
 
-    backdrop-filter: blur(5px);
+.hud-item span {
+    color: #00eaff;
 
     font-weight: bold;
+
+    margin-left: 4px;
 }
 
+.hud-item.power {
+    border-color: rgba(255, 210, 0, 0.6);
+}
 
-.power-box {
-
-    color: #ffd32a;
-
-    border-color: rgba(255,211,42,0.3);
+.hud-item.power span {
+    color: #ffd000;
 }
 
 
 /* =========================
-   HUD BOSS
+   BOSS HUD
 ========================= */
 
 .boss-hud {
-
     position: absolute;
 
-    top: 25px;
+    top: 80px;
 
     left: 50%;
 
     transform: translateX(-50%);
 
-    width: min(500px, 65vw);
+    width: min(550px, 70%);
 
     text-align: center;
 
-    z-index: 20;
-
-    display: none;
+    z-index: 100;
 }
 
-
-#bossName {
+.boss-name {
+    color: #ff3030;
 
     font-size: 20px;
 
@@ -423,45 +414,88 @@ body {
 
     margin-bottom: 7px;
 
-    text-shadow: 0 0 10px currentColor;
+    text-shadow:
+        0 0 10px #ff0000;
 }
 
-
-.boss-health-container {
-
-    width: 100%;
-
+.boss-bar-container {
     height: 18px;
 
-    background: #181818;
+    border: 2px solid #ff3030;
 
-    border: 2px solid #fff;
+    background: #190000;
 
-    border-radius: 20px;
+    border-radius: 10px;
 
     overflow: hidden;
+
+    box-shadow:
+        0 0 12px rgba(255, 0, 0, 0.4);
 }
 
-
-#bossHealthBar {
+.boss-bar {
+    height: 100%;
 
     width: 100%;
 
-    height: 100%;
+    background:
+        linear-gradient(
+            90deg,
+            #ff0000,
+            #ff6a00
+        );
 
-    background: #ff4757;
+    transition: width 0.1s;
+}
 
-    transition: width 0.15s;
+.boss-hp-text {
+    margin-top: 5px;
+
+    color: #ff9999;
+
+    font-size: 13px;
 }
 
 
-#bossHealthText {
+/* =========================
+   BOSS WARNING
+========================= */
 
-    margin-top: 5px;
+.boss-warning {
+    position: absolute;
 
-    font-size: 13px;
+    top: 45%;
 
-    color: #ddd;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 500;
+
+    font-size: clamp(30px, 6vw, 70px);
+
+    color: #ff2020;
+
+    font-weight: bold;
+
+    text-shadow:
+        0 0 10px red,
+        0 0 30px red;
+
+    animation:
+        bossWarning 0.5s infinite alternate;
+}
+
+@keyframes bossWarning {
+    from {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.03);
+    }
 }
 
 
@@ -470,77 +504,38 @@ body {
 ========================= */
 
 #gameOver {
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 100;
-
-    display: none;
-
-    flex-direction: column;
-
-    justify-content: center;
+    display: flex;
 
     align-items: center;
+    justify-content: center;
 
+    background: #000;
+}
+
+.gameover-content {
     text-align: center;
-
-    background: rgba(0,0,0,0.94);
 }
 
+.gameover-content h1 {
+    font-size: clamp(45px, 8vw, 90px);
 
-#gameOver h2 {
+    color: #ff3030;
 
-    font-size: 50px;
+    margin-bottom: 20px;
 
-    margin-bottom: 15px;
-
-    color: #ff4757;
+    text-shadow:
+        0 0 15px red;
 }
 
+.gameover-content p {
+    color: #aaa;
 
-#gameOver p {
+    margin: 8px;
 
-    margin-bottom: 25px;
-
-    color: #ccc;
-
-    font-size: 20px;
+    font-size: 18px;
 }
 
-
-#gameOver button {
-
-    width: 230px;
-
-    padding: 12px;
-
-    margin: 5px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-weight: bold;
-}
-
-
-#restartBtn {
-
-    background: #00d9ff;
-
-    color: #001016;
-}
-
-
-#menuBtn {
-
-    background: #222;
-
+.gameover-content strong {
     color: white;
 }
 
@@ -549,81 +544,63 @@ body {
    RODAPÉ
 ========================= */
 
-#updates {
-
+.footer-left,
+.footer-right {
     position: fixed;
 
-    left: 12px;
-    bottom: 10px;
+    bottom: 12px;
 
-    z-index: 50;
+    z-index: 1000;
+
+    color: #596675;
 
     font-size: 10px;
-
-    color: #666;
-
-    max-width: 250px;
 
     line-height: 1.4;
+
+    pointer-events: none;
 }
 
-
-#updates strong {
-
-    color: #888;
+.footer-left {
+    left: 15px;
 }
 
-
-#credit {
-
-    position: fixed;
-
-    right: 12px;
-    bottom: 10px;
-
-    z-index: 50;
-
-    font-size: 10px;
-
-    color: #555;
+.footer-right {
+    right: 15px;
 
     text-align: right;
 }
 
 
-@media (max-width: 600px) {
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
 
     #hud {
-
-        top: 12px;
-
+        top: 10px;
         left: 10px;
 
         gap: 5px;
+
+        flex-wrap: wrap;
     }
 
-    .hud-box {
+    .hud-item {
+        font-size: 11px;
 
-        padding: 7px 9px;
-
-        font-size: 12px;
+        padding: 5px 7px;
     }
 
     .boss-hud {
+        top: 80px;
 
-        top: 75px;
-
-        width: 80vw;
+        width: 85%;
     }
 
-    #bossName {
-
-        font-size: 16px;
-    }
-
-    #updates,
-    #credit {
-
+    .footer-left,
+    .footer-right {
         font-size: 8px;
     }
 

@@ -1,5 +1,5 @@
 // ==========================================
-// 🚀 NAVE ESCAPE - v1.0.0.5
+// 🚀 NAVE ESCAPE 
 // ==========================================
 
 
@@ -64,7 +64,7 @@ musica.volume = 0.2;
 
 // Som do tiro
 const somTiro = new Audio("music/laser.mp3");
-somTiro.volume = 0.4;
+somTiro.volume = 0.2;
 
 // ==========================================
 // TAMANHO DO CANVAS
@@ -304,7 +304,7 @@ function shoot() {
 
 function drawBackground() {
 
-    ctx.fillStyle = "#02040a";
+    ctx.fillStyle = "#040711";
 
     ctx.fillRect(
         0,
@@ -555,7 +555,7 @@ function drawBullet(bullet) {
     ctx.save();
 
     ctx.fillStyle =
-        "#00ffff";
+        "#ff000d";
 
     ctx.shadowColor =
         "#00ffff";

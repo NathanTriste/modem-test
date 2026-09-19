@@ -88,7 +88,7 @@ const musicaMenu =
 
 musicaMenu.loop = true;
 
-musicaMenu.volume = 0.25;
+musicaMenu.volume = 0.3;
 
 
 // ==========================================
@@ -110,7 +110,7 @@ musica.volume = 0.2;
 const somTiro =
     new Audio("music/laser.mp3");
 
-somTiro.volume = 0.4;
+somTiro.volume = 0.1;
 
 
 // ==========================================

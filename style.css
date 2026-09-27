@@ -12,6 +12,9 @@ body {
     background: #000;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
+
+    /* Evita zoom/gestos acidentais no jogo */
+    touch-action: none;
 }
 
 body {
@@ -35,6 +38,7 @@ body {
 .screen {
     position: absolute;
     inset: 0;
+
     width: 100%;
     height: 100%;
 }
@@ -46,20 +50,28 @@ body {
 
 #menu {
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     background:
-        radial-gradient(circle at center, #101b30 0%, #050810 45%, #000 100%);
+        radial-gradient(
+            circle at center,
+            #101b30 0%,
+            #050810 45%,
+            #000 100%
+        );
 }
 
 .menu-content {
     text-align: center;
+
     width: min(700px, 90%);
 }
 
 .menu-content h1 {
     font-size: clamp(40px, 7vw, 82px);
+
     margin-bottom: 20px;
 
     color: #00eaff;
@@ -72,7 +84,9 @@ body {
 
 .subtitle {
     font-size: 18px;
+
     color: #b8c7d9;
+
     margin-bottom: 35px;
 }
 
@@ -91,6 +105,7 @@ body {
     padding: 15px 45px;
 
     font-size: 20px;
+
     font-weight: bold;
 
     cursor: pointer;
@@ -134,6 +149,7 @@ body {
 
 .secondary-btn:hover {
     color: white;
+
     border-color: white;
 }
 
@@ -152,7 +168,12 @@ body {
 
 .controls h3 {
     color: #00eaff;
+
     margin-bottom: 8px;
+}
+
+.mobile-controls-text {
+    display: none;
 }
 
 
@@ -191,6 +212,40 @@ body {
 
     box-shadow:
         0 0 10px #00eaff;
+}
+
+
+/* =========================
+   TELA CHEIA
+========================= */
+
+.fullscreen-btn {
+    display: none;
+
+    position: fixed;
+
+    top: 20px;
+    right: 78px;
+
+    width: 38px;
+    height: 38px;
+
+    z-index: 10000;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    border: 1px solid #00eaff;
+
+    border-radius: 8px;
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -242,6 +297,7 @@ body {
 
 .welcome-icon {
     font-size: 50px;
+
     margin-bottom: 10px;
 }
 
@@ -465,7 +521,6 @@ body {
     position: absolute;
 
     top: 45%;
-
     left: 50%;
 
     transform: translate(-50%, -50%);
@@ -487,15 +542,27 @@ body {
 }
 
 @keyframes bossWarning {
+
     from {
+
         opacity: 0.5;
-        transform: translate(-50%, -50%) scale(0.98);
+
+        transform:
+            translate(-50%, -50%)
+            scale(0.98);
+
     }
 
     to {
+
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1.03);
+
+        transform:
+            translate(-50%, -50%)
+            scale(1.03);
+
     }
+
 }
 
 
@@ -504,6 +571,7 @@ body {
 ========================= */
 
 #gameOver {
+
     display: flex;
 
     align-items: center;
@@ -513,10 +581,12 @@ body {
 }
 
 .gameover-content {
+
     text-align: center;
 }
 
 .gameover-content h1 {
+
     font-size: clamp(45px, 8vw, 90px);
 
     color: #ff3030;
@@ -528,6 +598,7 @@ body {
 }
 
 .gameover-content p {
+
     color: #aaa;
 
     margin: 8px;
@@ -536,6 +607,7 @@ body {
 }
 
 .gameover-content strong {
+
     color: white;
 }
 
@@ -546,6 +618,7 @@ body {
 
 .footer-left,
 .footer-right {
+
     position: fixed;
 
     bottom: 12px;
@@ -562,13 +635,115 @@ body {
 }
 
 .footer-left {
+
     left: 15px;
 }
 
 .footer-right {
+
     right: 15px;
 
     text-align: right;
+}
+
+
+/* =========================================================
+   CONTROLES MOBILE
+========================================================= */
+
+#mobileControls {
+
+    display: none;
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+
+    bottom: 25px;
+
+    width: 100%;
+
+    padding:
+        0 20px;
+
+    z-index: 1000;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    pointer-events: none;
+}
+
+.mobile-control {
+
+    pointer-events: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0, 0, 0, 0.55);
+
+    color: white;
+
+    border: 2px solid #00eaff;
+
+    box-shadow:
+        0 0 10px rgba(0, 234, 255, 0.25);
+
+    -webkit-tap-highlight-color: transparent;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    touch-action: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.08s,
+        background 0.08s;
+}
+
+.mobile-control:active {
+
+    transform: scale(0.9);
+
+    background:
+        rgba(0, 234, 255, 0.25);
+}
+
+.move-button {
+
+    width: 70px;
+    height: 70px;
+
+    font-size: 28px;
+}
+
+.shoot-button {
+
+    width: 82px;
+    height: 82px;
+
+    font-size: 30px;
+
+    border-color: #ff3030;
+
+    box-shadow:
+        0 0 12px rgba(255, 48, 48, 0.35);
+}
+
+.shoot-button:active {
+
+    background:
+        rgba(255, 48, 48, 0.3);
 }
 
 
@@ -579,6 +754,7 @@ body {
 @media (max-width: 700px) {
 
     #hud {
+
         top: 10px;
         left: 10px;
 
@@ -588,20 +764,129 @@ body {
     }
 
     .hud-item {
+
         font-size: 11px;
 
         padding: 5px 7px;
     }
 
     .boss-hud {
-        top: 80px;
+
+        top: 75px;
 
         width: 85%;
     }
 
     .footer-left,
     .footer-right {
+
         font-size: 8px;
+    }
+
+    /* Botão tela cheia */
+
+    .fullscreen-btn {
+
+        display: flex;
+    }
+
+    /* Controles */
+
+    #mobileControls {
+
+        display: flex;
+    }
+
+    /* Controles do menu */
+
+    .pc-controls {
+
+        display: none;
+    }
+
+    .mobile-controls-text {
+
+        display: block;
+    }
+
+    /* Menu menor em telas pequenas */
+
+    .menu-content h1 {
+
+        font-size: clamp(
+            32px,
+            10vw,
+            55px
+        );
+    }
+
+    .subtitle {
+
+        font-size: 15px;
+
+        margin-bottom: 25px;
+    }
+
+    .controls {
+
+        margin-top: 30px;
+    }
+
+    /* Popup */
+
+    .welcome-box {
+
+        padding: 28px 22px;
+    }
+
+}
+
+
+/* =========================
+   CELULAR EM PAISAGEM
+========================= */
+
+@media (
+    max-width: 900px
+) and (
+    orientation: landscape
+) {
+
+    #mobileControls {
+
+        bottom: 12px;
+
+        padding:
+            0 25px;
+    }
+
+    .move-button {
+
+        width: 60px;
+        height: 60px;
+
+        font-size: 24px;
+    }
+
+    .shoot-button {
+
+        width: 70px;
+        height: 70px;
+
+        font-size: 26px;
+    }
+
+    #hud {
+
+        top: 8px;
+        left: 8px;
+    }
+
+    .hud-item {
+
+        font-size: 10px;
+
+        padding: 4px 6px;
     }
 
 }

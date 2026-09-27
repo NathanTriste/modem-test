@@ -2,17 +2,23 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Nave Escape</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <!-- BOTÃO DE SOM -->
     <button id="soundBtn" class="sound-btn">🔊</button>
 
+    <!-- BOTÃO TELA CHEIA - MOBILE -->
+    <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
+
+
     <!-- POPUP DE BOAS-VINDAS -->
     <div id="welcomeOverlay" class="welcome-overlay">
+
         <div class="welcome-box">
 
             <button id="closeWelcome" class="welcome-close">✕</button>
@@ -36,6 +42,7 @@
             </button>
 
         </div>
+
     </div>
 
 
@@ -58,8 +65,17 @@
 
                 <h3>CONTROLES</h3>
 
-                <p>⬅️ ➡️ ou A / D — Mover</p>
-                <p>SPACE — Atirar</p>
+                <p class="pc-controls">
+                    ⬅️ ➡️ ou A / D — Mover
+                </p>
+
+                <p class="pc-controls">
+                    SPACE — Atirar
+                </p>
+
+                <p class="mobile-controls-text">
+                    📱 Toque nos botões para jogar
+                </p>
 
             </div>
 
@@ -73,6 +89,8 @@
 
         <canvas id="gameCanvas"></canvas>
 
+
+        <!-- HUD -->
         <div id="hud">
 
             <div class="hud-item">
@@ -106,7 +124,9 @@
             </div>
 
             <div class="boss-bar-container">
+
                 <div id="bossBar" class="boss-bar"></div>
+
             </div>
 
             <div class="boss-hp-text">
@@ -120,6 +140,30 @@
         <!-- AVISO DE BOSS -->
         <div id="bossWarning" class="boss-warning hidden">
             ⚠️ BOSS INCOMING ⚠️
+        </div>
+
+
+        <!-- CONTROLES MOBILE -->
+        <div id="mobileControls">
+
+            <button
+                id="mobileLeft"
+                class="mobile-control move-button">
+                ◀
+            </button>
+
+            <button
+                id="mobileShoot"
+                class="mobile-control shoot-button">
+                🔥
+            </button>
+
+            <button
+                id="mobileRight"
+                class="mobile-control move-button">
+                ▶
+            </button>
+
         </div>
 
     </div>
@@ -157,34 +201,63 @@
 
     <!-- RODAPÉ -->
     <div class="footer-left">
+
         <strong>Nova Atualização:</strong>
+
         <br>
+
         V1.0.2.0
+
         <br>
+
         • Sistema de bosses
+
         <br>
+
         • Power coins
+
         <br>
+
         • Musica opcional
+
     </div>
+
 
     <div class="footer-right">
+
         Criado e desenvolvido com total auxílio do ChatGPT
+
     </div>
 
 
- <!-- ÁUDIOS -->
-<audio id="menuMusic" loop preload="auto">
-    <source src="music/MS1stM.mp3" type="audio/mpeg">
-</audio>
+    <!-- ÁUDIOS -->
 
-<audio id="gameMusic" loop preload="auto">
-    <source src="music/NoSurprises.mp3" type="audio/mpeg">
-</audio>
+    <audio id="menuMusic" loop preload="auto">
 
-<audio id="laserSound" preload="auto">
-    <source src="music/laser.mp3" type="audio/mpeg">
-</audio>
+        <source
+            src="music/MS1stM.mp3"
+            type="audio/mpeg">
+
+    </audio>
+
+
+    <audio id="gameMusic" loop preload="auto">
+
+        <source
+            src="music/NoSurprises.mp3"
+            type="audio/mpeg">
+
+    </audio>
+
+
+    <audio id="laserSound" preload="auto">
+
+        <source
+            src="music/laser.mp3"
+            type="audio/mpeg">
+
+    </audio>
+
 
     <script src="script.js"></script>
 

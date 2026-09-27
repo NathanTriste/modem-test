@@ -295,6 +295,131 @@ window.addEventListener("keyup", (event) => {
 
 
 /* =========================================================
+   CONTROLES MOBILE
+========================================================= */
+
+/*
+    Estes elementos existem somente quando
+    o HTML possui os botões mobile.
+
+    Se estiver no PC, eles simplesmente ficam inativos.
+*/
+
+const mobileLeft = document.getElementById("mobileLeft");
+const mobileRight = document.getElementById("mobileRight");
+const mobileShoot = document.getElementById("mobileShoot");
+
+let mobileLeftPressed = false;
+let mobileRightPressed = false;
+let mobileShootPressed = false;
+
+
+/*
+    Botão ESQUERDA.
+*/
+
+if (mobileLeft) {
+
+    mobileLeft.addEventListener("pointerdown", (event) => {
+
+        event.preventDefault();
+
+        mobileLeftPressed = true;
+
+        try {
+            mobileLeft.setPointerCapture(event.pointerId);
+        } catch (error) {}
+
+    });
+
+    mobileLeft.addEventListener("pointerup", (event) => {
+
+        event.preventDefault();
+
+        mobileLeftPressed = false;
+
+    });
+
+    mobileLeft.addEventListener("pointercancel", () => {
+
+        mobileLeftPressed = false;
+
+    });
+
+}
+
+
+/*
+    Botão DIREITA.
+*/
+
+if (mobileRight) {
+
+    mobileRight.addEventListener("pointerdown", (event) => {
+
+        event.preventDefault();
+
+        mobileRightPressed = true;
+
+        try {
+            mobileRight.setPointerCapture(event.pointerId);
+        } catch (error) {}
+
+    });
+
+    mobileRight.addEventListener("pointerup", (event) => {
+
+        event.preventDefault();
+
+        mobileRightPressed = false;
+
+    });
+
+    mobileRight.addEventListener("pointercancel", () => {
+
+        mobileRightPressed = false;
+
+    });
+
+}
+
+
+/*
+    Botão ATIRAR.
+*/
+
+if (mobileShoot) {
+
+    mobileShoot.addEventListener("pointerdown", (event) => {
+
+        event.preventDefault();
+
+        mobileShootPressed = true;
+
+        try {
+            mobileShoot.setPointerCapture(event.pointerId);
+        } catch (error) {}
+
+    });
+
+    mobileShoot.addEventListener("pointerup", (event) => {
+
+        event.preventDefault();
+
+        mobileShootPressed = false;
+
+    });
+
+    mobileShoot.addEventListener("pointercancel", () => {
+
+        mobileShootPressed = false;
+
+    });
+
+}
+
+
+/* =========================================================
    METEOROS
 ========================================================= */
 
@@ -1484,9 +1609,18 @@ function updateBullets() {
 
 function updatePlayer() {
 
+    /*
+        PC:
+        Arrow Left / A
+
+        MOBILE:
+        Botão esquerdo
+    */
+
     if (
         keys["arrowleft"] ||
-        keys["a"]
+        keys["a"] ||
+        mobileLeftPressed
     ) {
 
         player.x -=
@@ -1494,9 +1628,19 @@ function updatePlayer() {
 
     }
 
+
+    /*
+        PC:
+        Arrow Right / D
+
+        MOBILE:
+        Botão direito
+    */
+
     if (
         keys["arrowright"] ||
-        keys["d"]
+        keys["d"] ||
+        mobileRightPressed
     ) {
 
         player.x +=
@@ -1531,9 +1675,18 @@ function updatePlayer() {
 
     /*
         Atirar.
+
+        PC:
+        SPACE
+
+        MOBILE:
+        Botão de tiro
     */
 
-    if (keys.space) {
+    if (
+        keys.space ||
+        mobileShootPressed
+    ) {
 
         shoot();
 
@@ -2642,6 +2795,98 @@ menuBtn.addEventListener(
 
 
 /* =========================================================
+   TELA CHEIA — MOBILE
+========================================================= */
+
+const fullscreenBtn =
+    document.getElementById("fullscreenBtn");
+
+
+function atualizarBotaoFullscreen() {
+
+    if (!fullscreenBtn) {
+        return;
+    }
+
+    if (document.fullscreenElement) {
+
+        fullscreenBtn.textContent = "✕";
+
+    } else {
+
+        fullscreenBtn.textContent = "⛶";
+
+    }
+
+}
+
+
+async function alternarTelaCheia() {
+
+    if (!fullscreenBtn) {
+        return;
+    }
+
+    try {
+
+        if (!document.fullscreenElement) {
+
+            await document.documentElement.requestFullscreen();
+
+        } else {
+
+            await document.exitFullscreen();
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "⚠️ Não foi possível ativar a tela cheia:",
+            error
+        );
+
+    }
+
+}
+
+
+if (fullscreenBtn) {
+
+    fullscreenBtn.addEventListener(
+        "click",
+        alternarTelaCheia
+    );
+
+}
+
+
+document.addEventListener(
+    "fullscreenchange",
+    () => {
+
+        atualizarBotaoFullscreen();
+
+        /*
+            Dá um pequeno tempo para o navegador
+            terminar a mudança de tela antes de
+            recalcular o canvas.
+        */
+
+        setTimeout(() => {
+
+            resizeCanvas();
+
+            player.y =
+                canvas.height - 100;
+
+        }, 100);
+
+    }
+);
+
+
+/* =========================================================
    GAME LOOP
 ========================================================= */
 
@@ -2763,6 +3008,8 @@ function gameLoop() {
 ========================================================= */
 
 atualizarHUD();
+
+atualizarBotaoFullscreen();
 
 tocarMusicaMenu();
 
